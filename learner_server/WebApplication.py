@@ -37,7 +37,7 @@ class WebApplication(SingletonInstance):
             return self.process_manager.get_queue_list()
 
         # 1. 신규 작업 할당 가능 여부 조회 요청 URL 구조
-        @self.app.route('/query/queue')
+        @self.app.route('/query/availability')
         def is_available():
             return self.process_manager.is_available()
 

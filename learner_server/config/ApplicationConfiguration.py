@@ -1,9 +1,9 @@
 import os
 import configparser
-from learner_server.common.SingletonInstance import SingletonInstance
-from learner_server.dao.AbstractDataSource import AbstractDataSource
-from learner_server.dao.AbstractSession import AbstractSession
-from learner_server.dao import CommonCodeDAO
+from ..common.SingletonInstance import SingletonInstance
+from ..dao.AbstractDataSource import AbstractDataSource
+from ..dao.AbstractSession import AbstractSession
+from ..dao import CommonCodeDAO
 
 
 class ApplicationConfiguration(SingletonInstance):

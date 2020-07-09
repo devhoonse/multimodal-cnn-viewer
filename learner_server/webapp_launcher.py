@@ -1,11 +1,11 @@
-from learner_server import ApplicationConfiguration, WebApplication
-from learner_server.utils import LogHandler
+from . import ApplicationConfiguration, WebApplication
+from .utils import LogHandler
 
 
 def main():
 
     config: ApplicationConfiguration = ApplicationConfiguration.instance()
-    config.init('./config.properties')
+    config.init('config/config.properties')
 
     log_handler: LogHandler = LogHandler.instance()
     log_handler.init(config)

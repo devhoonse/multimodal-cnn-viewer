@@ -1,5 +1,7 @@
 from ..common import SingletonInstance
 from ..dao import AbstractSession, QueueDAO
+from ..processor import Launcher
+from .. import ApplicationConfiguration
 
 
 class ProcessManager(SingletonInstance):
@@ -8,17 +10,19 @@ class ProcessManager(SingletonInstance):
     """
 
     def __init__(self):
-        pass
+        self.max_processes: int = 1
+        self.launcher: Launcher = None
 
-    def init(self):
-        pass
+    def init(self, config: ApplicationConfiguration):
+        self.launcher = Launcher()
+        self.launcher.init(config)
 
     def is_available(self) -> bool:
         pass
 
     def get_queue_list(self, session: AbstractSession):
         queue_dao: QueueDAO = QueueDAO.instance()
-        queue_list = QueueDAO.map(queue_dao.select(session=session))
+        queue_list = QueueDAO.map(queue_dao.select_queue_list(session=session))
         print(queue_list)
         return queue_list
 

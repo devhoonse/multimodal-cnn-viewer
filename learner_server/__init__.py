@@ -1,5 +1,5 @@
 
-from .ApplicationConfiguration import ApplicationConfiguration
+from learner_server.config.ApplicationConfiguration import ApplicationConfiguration
 from .WebApplication import WebApplication
 
 

@@ -16,26 +16,7 @@ class QueueDAO(AbstractDAO, SingletonInstance):
         """
         pass
 
-    def select_master(self, session: AbstractSession, **params):
-        """
-        세션 인스턴스를 통해 Data Source로 부터 list 데이터 조회
-        :param session: AbstractSession Instance
-        :param params: SQL Parameter Data
-        :return: {"columns" : columns, "data" : list}
-        """
-        return session.select("""
-            SELECT PLAN_VER_ID
-                 , WORK_ORDER_ID
-                 , ORDER_ITEM_ID
-                 , PRIORITY
-                 , DTL_PRIORITY
-                 , ORDER_QTY
-                 , DUE_DT || '235959' AS DUE_DT 
-            FROM FS_WORK_ORDER 
-            WHERE ORDER_QTY <> 0
-        """, params)
-
-    def select(self, session: AbstractSession, **params):
+    def select_queue_list(self, session: AbstractSession, **params):
         """
         세션 인스턴스를 통해 Data Source로 부터 list 데이터 조회
         :param session: AbstractSession Instance
