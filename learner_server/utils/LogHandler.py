@@ -3,7 +3,7 @@ import logging.config
 import json
 
 from ..common import SingletonInstance
-from .. import ApplicationConfiguration
+from ..configs import ApplicationConfiguration
 
 
 class LogHandler(SingletonInstance):
@@ -17,12 +17,12 @@ class LogHandler(SingletonInstance):
 
     def init(self, config: ApplicationConfiguration):
         """
-            Logger Configuration, Logger 설정파일인 ./resources/m4_log.json 파일을 읽어들여서 설정함
+            Logger Configuration, Logger 설정파일을 읽어들여서 설정
         :param config: Application Configuration
         :return: void
         """
 
-        with open(config.find("Server", "log.file"), "rt") as f:
+        with open(config.find("Logging", "log.config"), "rt") as f:
             config = json.load(f)
 
         logging.config.dictConfig(config)

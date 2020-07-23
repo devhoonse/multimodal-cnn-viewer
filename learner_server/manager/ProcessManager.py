@@ -1,7 +1,13 @@
+# -*- coding: utf-8 -*-
+
 from ..common import SingletonInstance
-from ..dao import AbstractSession, QueueDAO
-from ..processor import Launcher
-from .. import ApplicationConfiguration
+from ..dao import AbstractSession, QueueDAO, ProcessesDAO
+from ..processor import Learner
+from ..configs import ApplicationConfiguration
+
+import os
+import signal
+from multiprocessing import Process
 
 
 class ProcessManager(SingletonInstance):
@@ -11,11 +17,11 @@ class ProcessManager(SingletonInstance):
 
     def __init__(self):
         self.max_processes: int = 1
-        self.launcher: Launcher = None
+        self._learner: Learner = None
 
     def init(self, config: ApplicationConfiguration):
-        self.launcher = Launcher()
-        self.launcher.init(config)
+        self._learner = Learner.instance()
+        self._learner.init(self, config)
 
     def is_available(self) -> bool:
         pass
@@ -23,31 +29,34 @@ class ProcessManager(SingletonInstance):
     def get_queue_list(self, session: AbstractSession):
         queue_dao: QueueDAO = QueueDAO.instance()
         queue_list = QueueDAO.map(queue_dao.select_queue_list(session=session))
-        print(queue_list)
         return queue_list
 
-    def get_process_list(self):
-        pass
+    def get_process_list(self, session: AbstractSession):
+        processes_dao: ProcessesDAO = ProcessesDAO.instance()
+        process_list = ProcessesDAO.map(processes_dao.select_process_list(session=session))
+        return process_list
 
     def get_process_info(self):
         pass
 
-    def start_process(self, step, params):
-        log_msg: str = f"REQUEST - start {step} / {params}"
-        print(log_msg)
+    def start_process(self, prj, work, step, **kwargs):
+        result: str
+
+        if self.is_available():
+            pid = self._create_process(step, **kwargs)
+            result = f"PID = {pid}"
+        else:
+            result = f"QUEUE"
+
+        log_msg: str = f"REQUEST - start {prj} / {work} / {step} -> {result}"
         return log_msg
 
-    def kill_process(self, prj_id, work_id, step):
-        log_msg: str = f"REQUEST - kill {prj_id} / {work_id} / {step}"
-        print(log_msg)
+    def kill_process(self, prj, work, step):
+        log_msg: str = f"REQUEST - kill {prj} / {work} / {step}"
+
+        pid: int = self._get_requested_pid(prj, work, step)
+        os.kill(pid, signal.SIGSTOP)
         return log_msg
-
-    def _send_progression(self):
-        """
-
-        :return:
-        """
-        pass
 
     def receive_progression(self, msg):
         """
@@ -58,7 +67,15 @@ class ProcessManager(SingletonInstance):
         """
         pass
 
-    def _get_pid(self):
+    def _create_process(self, step, **kwargs):
+        target_function: callable = self._learner.get_target_job(step)
+        proc = Process(target=target_function, kwargs=kwargs)
+        return proc.pid
+
+    def _search_process(self, prj, work, step):
+        pass
+
+    def _get_requested_pid(self, prj, work, step) -> int:
         pass
 
     def _get_ppid(self):

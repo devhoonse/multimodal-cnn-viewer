@@ -23,7 +23,7 @@ class CommonCodeDAO(AbstractDAO, SingletonInstance):
         :param params: sql 파라미터 데이터
         :return: {"columns" : columns, "data" : list}
         """
-        return session.select("SELECT * FROM CM_COMN_CD WHERE use_yn = :use_yn", params)
+        return session.select("SELECT * FROM CM_COMN_CD WHERE USE_YN = :use_yn", params)
 
     def select_group_code(self, session: AbstractSession, **params):
         """
@@ -32,7 +32,7 @@ class CommonCodeDAO(AbstractDAO, SingletonInstance):
         :param params: sql 파라미터 데이터
         :return: {"columns" : columns, "data" : list}
         """
-        return session.select("SELECT * FROM CM_COMN_GRP_CD WHERE use_yn = :use_yn", params)
+        return session.select("SELECT * FROM CM_COMN_GRP_CD WHERE USE_YN = :use_yn", params)
 
     def execute(self, session: AbstractSession, sql_template: str, data_list: list):
         """

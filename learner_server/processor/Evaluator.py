@@ -1,11 +1,13 @@
 from ..common import SingletonInstance
-from .. import ApplicationConfiguration
+from ..configs import ApplicationConfiguration
 
 
-class Loader(SingletonInstance):
+class Evaluator(SingletonInstance):
     def __init__(self):
         pass
 
     def init(self, config: ApplicationConfiguration):
         pass
 
+    def run(self, *args, **kwargs):
+        pass

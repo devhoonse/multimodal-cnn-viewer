@@ -3,8 +3,9 @@ import os
 import cx_Oracle
 
 from ..common import SingletonInstance
-from .. import ApplicationConfiguration
-from . import AbstractDataSource, OracleSqlSession
+from ..configs import ApplicationConfiguration
+from .AbstractDataSource import AbstractDataSource
+from .OracleSqlSession import OracleSqlSession
 
 
 class OracleDataSource(AbstractDataSource, SingletonInstance):
@@ -28,7 +29,7 @@ class OracleDataSource(AbstractDataSource, SingletonInstance):
     def init(self, config: ApplicationConfiguration):
         """
         Database SessionPool 초기화
-        :param: config - Application Configuration
+        :param: configs - Application Configuration
         """
         uri_map = dict(config.find_section("DatabaseSource"))
         tns: str = cx_Oracle.makedsn(

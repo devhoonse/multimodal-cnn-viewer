@@ -1,5 +1,5 @@
 from ..common import SingletonInstance
-from .. import ApplicationConfiguration
+from ..configs import ApplicationConfiguration
 
 
 class Preprocessor(SingletonInstance):
@@ -9,3 +9,5 @@ class Preprocessor(SingletonInstance):
     def init(self, config: ApplicationConfiguration):
         pass
 
+    def run(self, *args, **kwargs):
+        pass
