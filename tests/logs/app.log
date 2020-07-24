@@ -1,0 +1,192 @@
+2020-07-23 14:44:40,554 - INFO _internal.py-_log :  * Running on http://0.0.0.0:9364/ (Press CTRL+C to quit)
+2020-07-23 14:45:20,210 - INFO _internal.py-_log : 192.168.7.83 - - [23/Jul/2020 14:45:20] "[33mGET / HTTP/1.1[0m" 404 -
+2020-07-23 14:45:20,272 - INFO _internal.py-_log : 192.168.7.83 - - [23/Jul/2020 14:45:20] "[33mGET /favicon.ico HTTP/1.1[0m" 404 -
+2020-07-23 14:45:32,793 - INFO _internal.py-_log : 192.168.7.83 - - [23/Jul/2020 14:45:32] "[37mGET /start/step=1/params=3 HTTP/1.1[0m" 200 -
+2020-07-23 15:06:15,072 - INFO _internal.py-_log :  * Running on http://0.0.0.0:9364/ (Press CTRL+C to quit)
+2020-07-23 15:08:29,134 - INFO _internal.py-_log :  * Running on http://0.0.0.0:9364/ (Press CTRL+C to quit)
+2020-07-23 15:09:07,508 - ERROR app.py-log_exception : Exception on /queue/list [GET]
+Traceback (most recent call last):
+  File "C:\ProgramData\Anaconda3\envs\golbin_tf\lib\site-packages\flask\app.py", line 2447, in wsgi_app
+    response = self.full_dispatch_request()
+  File "C:\ProgramData\Anaconda3\envs\golbin_tf\lib\site-packages\flask\app.py", line 1952, in full_dispatch_request
+    rv = self.handle_user_exception(e)
+  File "C:\ProgramData\Anaconda3\envs\golbin_tf\lib\site-packages\flask\app.py", line 1821, in handle_user_exception
+    reraise(exc_type, exc_value, tb)
+  File "C:\ProgramData\Anaconda3\envs\golbin_tf\lib\site-packages\flask\_compat.py", line 39, in reraise
+    raise value
+  File "C:\ProgramData\Anaconda3\envs\golbin_tf\lib\site-packages\flask\app.py", line 1950, in full_dispatch_request
+    rv = self.dispatch_request()
+  File "C:\ProgramData\Anaconda3\envs\golbin_tf\lib\site-packages\flask\app.py", line 1936, in dispatch_request
+    return self.view_functions[rule.endpoint](**req.view_args)
+  File "C:\Users\shchoi\PycharmProjects\cnn\learner_server\WebApplication.py", line 52, in get_queue_list
+    return self.process_manager.get_queue_list()
+TypeError: get_queue_list() missing 1 required positional argument: 'session'
+2020-07-23 15:09:07,514 - INFO _internal.py-_log : 192.168.7.83 - - [23/Jul/2020 15:09:07] "[35m[1mGET /queue/list HTTP/1.1[0m" 500 -
+2020-07-23 15:09:07,582 - INFO _internal.py-_log : 192.168.7.83 - - [23/Jul/2020 15:09:07] "[33mGET /favicon.ico HTTP/1.1[0m" 404 -
+2020-07-23 15:11:47,722 - INFO _internal.py-_log :  * Running on http://0.0.0.0:9364/ (Press CTRL+C to quit)
+2020-07-23 15:11:50,656 - ERROR app.py-log_exception : Exception on /queue/list [GET]
+Traceback (most recent call last):
+  File "C:\ProgramData\Anaconda3\envs\golbin_tf\lib\site-packages\flask\app.py", line 2447, in wsgi_app
+    response = self.full_dispatch_request()
+  File "C:\ProgramData\Anaconda3\envs\golbin_tf\lib\site-packages\flask\app.py", line 1952, in full_dispatch_request
+    rv = self.handle_user_exception(e)
+  File "C:\ProgramData\Anaconda3\envs\golbin_tf\lib\site-packages\flask\app.py", line 1821, in handle_user_exception
+    reraise(exc_type, exc_value, tb)
+  File "C:\ProgramData\Anaconda3\envs\golbin_tf\lib\site-packages\flask\_compat.py", line 39, in reraise
+    raise value
+  File "C:\ProgramData\Anaconda3\envs\golbin_tf\lib\site-packages\flask\app.py", line 1950, in full_dispatch_request
+    rv = self.dispatch_request()
+  File "C:\ProgramData\Anaconda3\envs\golbin_tf\lib\site-packages\flask\app.py", line 1936, in dispatch_request
+    return self.view_functions[rule.endpoint](**req.view_args)
+  File "C:\Users\shchoi\PycharmProjects\cnn\learner_server\WebApplication.py", line 55, in get_queue_list
+    queue_list = self.process_manager.get_queue_list(session)
+  File "C:\Users\shchoi\PycharmProjects\cnn\learner_server\manager\ProcessManager.py", line 24, in get_queue_list
+    queue_dao: QueueDAO = QueueDAO.instance()
+  File "C:\Users\shchoi\PycharmProjects\cnn\learner_server\common\SingletonInstance.py", line 11, in instance
+    cls.__instance = cls()
+TypeError: Can't instantiate abstract class QueueDAO with abstract methods select
+2020-07-23 15:11:50,662 - INFO _internal.py-_log : 192.168.7.83 - - [23/Jul/2020 15:11:50] "[35m[1mGET /queue/list HTTP/1.1[0m" 500 -
+2020-07-23 15:12:04,946 - INFO _internal.py-_log :  * Running on http://0.0.0.0:9364/ (Press CTRL+C to quit)
+2020-07-23 15:12:06,899 - ERROR app.py-log_exception : Exception on /queue/list [GET]
+Traceback (most recent call last):
+  File "C:\ProgramData\Anaconda3\envs\golbin_tf\lib\site-packages\flask\app.py", line 2447, in wsgi_app
+    response = self.full_dispatch_request()
+  File "C:\ProgramData\Anaconda3\envs\golbin_tf\lib\site-packages\flask\app.py", line 1952, in full_dispatch_request
+    rv = self.handle_user_exception(e)
+  File "C:\ProgramData\Anaconda3\envs\golbin_tf\lib\site-packages\flask\app.py", line 1821, in handle_user_exception
+    reraise(exc_type, exc_value, tb)
+  File "C:\ProgramData\Anaconda3\envs\golbin_tf\lib\site-packages\flask\_compat.py", line 39, in reraise
+    raise value
+  File "C:\ProgramData\Anaconda3\envs\golbin_tf\lib\site-packages\flask\app.py", line 1950, in full_dispatch_request
+    rv = self.dispatch_request()
+  File "C:\ProgramData\Anaconda3\envs\golbin_tf\lib\site-packages\flask\app.py", line 1936, in dispatch_request
+    return self.view_functions[rule.endpoint](**req.view_args)
+  File "C:\Users\shchoi\PycharmProjects\cnn\learner_server\WebApplication.py", line 55, in get_queue_list
+    queue_list = self.process_manager.get_queue_list(session)
+  File "C:\Users\shchoi\PycharmProjects\cnn\learner_server\manager\ProcessManager.py", line 24, in get_queue_list
+    queue_dao: QueueDAO = QueueDAO.instance()
+  File "C:\Users\shchoi\PycharmProjects\cnn\learner_server\common\SingletonInstance.py", line 11, in instance
+    cls.__instance = cls()
+TypeError: Can't instantiate abstract class QueueDAO with abstract methods select
+2020-07-23 15:12:06,904 - INFO _internal.py-_log : 192.168.7.83 - - [23/Jul/2020 15:12:06] "[35m[1mGET /queue/list HTTP/1.1[0m" 500 -
+2020-07-23 15:13:59,607 - INFO _internal.py-_log :  * Running on http://0.0.0.0:9364/ (Press CTRL+C to quit)
+2020-07-23 15:14:01,835 - ERROR app.py-log_exception : Exception on /queue/list [GET]
+Traceback (most recent call last):
+  File "C:\Users\shchoi\PycharmProjects\cnn\learner_server\dao\OracleSqlSession.py", line 68, in select
+    cursor.execute(sql, params or {})
+cx_Oracle.DatabaseError: ORA-01008: not all variables bound
+
+During handling of the above exception, another exception occurred:
+
+Traceback (most recent call last):
+  File "C:\ProgramData\Anaconda3\envs\golbin_tf\lib\site-packages\flask\app.py", line 2447, in wsgi_app
+    response = self.full_dispatch_request()
+  File "C:\ProgramData\Anaconda3\envs\golbin_tf\lib\site-packages\flask\app.py", line 1952, in full_dispatch_request
+    rv = self.handle_user_exception(e)
+  File "C:\ProgramData\Anaconda3\envs\golbin_tf\lib\site-packages\flask\app.py", line 1821, in handle_user_exception
+    reraise(exc_type, exc_value, tb)
+  File "C:\ProgramData\Anaconda3\envs\golbin_tf\lib\site-packages\flask\_compat.py", line 39, in reraise
+    raise value
+  File "C:\ProgramData\Anaconda3\envs\golbin_tf\lib\site-packages\flask\app.py", line 1950, in full_dispatch_request
+    rv = self.dispatch_request()
+  File "C:\ProgramData\Anaconda3\envs\golbin_tf\lib\site-packages\flask\app.py", line 1936, in dispatch_request
+    return self.view_functions[rule.endpoint](**req.view_args)
+  File "C:\Users\shchoi\PycharmProjects\cnn\learner_server\WebApplication.py", line 55, in get_queue_list
+    queue_list = self.process_manager.get_queue_list(session)
+  File "C:\Users\shchoi\PycharmProjects\cnn\learner_server\manager\ProcessManager.py", line 25, in get_queue_list
+    queue_list = QueueDAO.map(queue_dao.select_queue_list(session=session))
+  File "C:\Users\shchoi\PycharmProjects\cnn\learner_server\dao\QueueDAO.py", line 29, in select_queue_list
+    return session.select("SELECT * FROM CM_COMN_CD WHERE use_yn = :use_yn", params)
+  File "C:\Users\shchoi\PycharmProjects\cnn\learner_server\dao\OracleSqlSession.py", line 76, in select
+    raise DataSourceError("Oracle database select Error", e, error_code)
+learner_server.dao.exceptions.DataSourceError.DataSourceError: 'Oracle database select Error'
+2020-07-23 15:14:01,842 - INFO _internal.py-_log : 192.168.7.83 - - [23/Jul/2020 15:14:01] "[35m[1mGET /queue/list HTTP/1.1[0m" 500 -
+2020-07-23 15:17:08,181 - INFO _internal.py-_log :  * Running on http://0.0.0.0:9364/ (Press CTRL+C to quit)
+2020-07-23 15:17:11,728 - ERROR app.py-log_exception : Exception on /queue/list [GET]
+Traceback (most recent call last):
+  File "C:\ProgramData\Anaconda3\envs\golbin_tf\lib\site-packages\flask\app.py", line 2447, in wsgi_app
+    response = self.full_dispatch_request()
+  File "C:\ProgramData\Anaconda3\envs\golbin_tf\lib\site-packages\flask\app.py", line 1953, in full_dispatch_request
+    return self.finalize_request(rv)
+  File "C:\ProgramData\Anaconda3\envs\golbin_tf\lib\site-packages\flask\app.py", line 1968, in finalize_request
+    response = self.make_response(rv)
+  File "C:\ProgramData\Anaconda3\envs\golbin_tf\lib\site-packages\flask\app.py", line 2131, in make_response
+    " {rv.__class__.__name__}.".format(rv=rv)
+TypeError: The view function did not return a valid response. The return type must be a string, dict, tuple, Response instance, or WSGI callable, but it was a list.
+2020-07-23 15:17:11,730 - INFO _internal.py-_log : 192.168.7.83 - - [23/Jul/2020 15:17:11] "[35m[1mGET /queue/list HTTP/1.1[0m" 500 -
+2020-07-23 15:18:12,228 - INFO _internal.py-_log :  * Running on http://0.0.0.0:9364/ (Press CTRL+C to quit)
+2020-07-23 15:18:14,516 - INFO _internal.py-_log : 192.168.7.83 - - [23/Jul/2020 15:18:14] "[37mGET /queue/list HTTP/1.1[0m" 200 -
+2020-07-23 15:25:48,899 - INFO _internal.py-_log : 192.168.7.83 - - [23/Jul/2020 15:25:48] "[37mGET /queue/list HTTP/1.1[0m" 200 -
+2020-07-23 15:27:45,657 - INFO _internal.py-_log :  * Running on http://0.0.0.0:9364/ (Press CTRL+C to quit)
+2020-07-23 15:27:49,035 - INFO _internal.py-_log : 192.168.7.83 - - [23/Jul/2020 15:27:49] "[37mGET /queue/list HTTP/1.1[0m" 200 -
+2020-07-23 15:38:23,872 - INFO _internal.py-_log :  * Running on http://0.0.0.0:9364/ (Press CTRL+C to quit)
+2020-07-23 15:38:27,169 - INFO _internal.py-_log : 192.168.7.83 - - [23/Jul/2020 15:38:27] "[37mGET /proc/list HTTP/1.1[0m" 200 -
+2020-07-23 15:45:17,103 - INFO _internal.py-_log :  * Running on http://0.0.0.0:9364/ (Press CTRL+C to quit)
+2020-07-23 15:45:22,705 - INFO _internal.py-_log : 192.168.7.83 - - [23/Jul/2020 15:45:22] "[37mGET /proc/list HTTP/1.1[0m" 200 -
+2020-07-23 15:45:35,505 - INFO _internal.py-_log : 192.168.7.83 - - [23/Jul/2020 15:45:35] "[32mGET /proc/start/step=3 HTTP/1.1[0m" 308 -
+2020-07-23 15:45:35,509 - INFO _internal.py-_log : 192.168.7.83 - - [23/Jul/2020 15:45:35] "[37mGET /proc/start/step%3D3/ HTTP/1.1[0m" 200 -
+2020-07-23 15:45:47,137 - INFO _internal.py-_log : 192.168.7.83 - - [23/Jul/2020 15:45:47] "[33mGET /proc/start/step3/ HTTP/1.1[0m" 404 -
+2020-07-23 15:45:50,311 - INFO _internal.py-_log : 192.168.7.83 - - [23/Jul/2020 15:45:50] "[37mGET /proc/start/step=3/ HTTP/1.1[0m" 200 -
+2020-07-23 15:46:03,964 - ERROR app.py-log_exception : Exception on /proc/start/step=3/ [GET]
+Traceback (most recent call last):
+  File "C:\ProgramData\Anaconda3\envs\golbin_tf\lib\site-packages\flask\app.py", line 2447, in wsgi_app
+    response = self.full_dispatch_request()
+  File "C:\ProgramData\Anaconda3\envs\golbin_tf\lib\site-packages\flask\app.py", line 1952, in full_dispatch_request
+    rv = self.handle_user_exception(e)
+  File "C:\ProgramData\Anaconda3\envs\golbin_tf\lib\site-packages\flask\app.py", line 1821, in handle_user_exception
+    reraise(exc_type, exc_value, tb)
+  File "C:\ProgramData\Anaconda3\envs\golbin_tf\lib\site-packages\flask\_compat.py", line 39, in reraise
+    raise value
+  File "C:\ProgramData\Anaconda3\envs\golbin_tf\lib\site-packages\flask\app.py", line 1950, in full_dispatch_request
+    rv = self.dispatch_request()
+  File "C:\ProgramData\Anaconda3\envs\golbin_tf\lib\site-packages\flask\app.py", line 1936, in dispatch_request
+    return self.view_functions[rule.endpoint](**req.view_args)
+  File "C:\Users\shchoi\PycharmProjects\cnn\learner_server\WebApplication.py", line 76, in start
+    return self.process_manager.start_process(step, **request.args)
+  File "C:\Users\shchoi\PycharmProjects\cnn\learner_server\manager\ProcessManager.py", line 41, in start_process
+    print(**params)
+TypeError: 'arg1' is an invalid keyword argument for this function
+2020-07-23 15:46:03,969 - INFO _internal.py-_log : 192.168.7.83 - - [23/Jul/2020 15:46:03] "[35m[1mGET /proc/start/step=3/?arg1=arg1&arg2=arg2 HTTP/1.1[0m" 500 -
+2020-07-23 15:51:52,561 - INFO _internal.py-_log :  * Running on http://0.0.0.0:9364/ (Press CTRL+C to quit)
+2020-07-23 15:52:27,872 - INFO _internal.py-_log :  * Running on http://0.0.0.0:9364/ (Press CTRL+C to quit)
+2020-07-23 15:52:37,329 - ERROR app.py-log_exception : Exception on /proc/start/prj=p001/work=w01/step=3 [GET]
+Traceback (most recent call last):
+  File "C:\ProgramData\Anaconda3\envs\golbin_tf\lib\site-packages\flask\app.py", line 2447, in wsgi_app
+    response = self.full_dispatch_request()
+  File "C:\ProgramData\Anaconda3\envs\golbin_tf\lib\site-packages\flask\app.py", line 1952, in full_dispatch_request
+    rv = self.handle_user_exception(e)
+  File "C:\ProgramData\Anaconda3\envs\golbin_tf\lib\site-packages\flask\app.py", line 1821, in handle_user_exception
+    reraise(exc_type, exc_value, tb)
+  File "C:\ProgramData\Anaconda3\envs\golbin_tf\lib\site-packages\flask\_compat.py", line 39, in reraise
+    raise value
+  File "C:\ProgramData\Anaconda3\envs\golbin_tf\lib\site-packages\flask\app.py", line 1950, in full_dispatch_request
+    rv = self.dispatch_request()
+  File "C:\ProgramData\Anaconda3\envs\golbin_tf\lib\site-packages\flask\app.py", line 1936, in dispatch_request
+    return self.view_functions[rule.endpoint](**req.view_args)
+TypeError: start() got an unexpected keyword argument 'step_id'
+2020-07-23 15:52:37,333 - INFO _internal.py-_log : 192.168.7.83 - - [23/Jul/2020 15:52:37] "[35m[1mGET /proc/start/prj=p001/work=w01/step=3 HTTP/1.1[0m" 500 -
+2020-07-23 15:53:08,878 - INFO _internal.py-_log :  * Running on http://0.0.0.0:9364/ (Press CTRL+C to quit)
+2020-07-23 15:53:11,007 - ERROR app.py-log_exception : Exception on /proc/start/prj=p001/work=w01/step=3 [GET]
+Traceback (most recent call last):
+  File "C:\ProgramData\Anaconda3\envs\golbin_tf\lib\site-packages\flask\app.py", line 2447, in wsgi_app
+    response = self.full_dispatch_request()
+  File "C:\ProgramData\Anaconda3\envs\golbin_tf\lib\site-packages\flask\app.py", line 1952, in full_dispatch_request
+    rv = self.handle_user_exception(e)
+  File "C:\ProgramData\Anaconda3\envs\golbin_tf\lib\site-packages\flask\app.py", line 1821, in handle_user_exception
+    reraise(exc_type, exc_value, tb)
+  File "C:\ProgramData\Anaconda3\envs\golbin_tf\lib\site-packages\flask\_compat.py", line 39, in reraise
+    raise value
+  File "C:\ProgramData\Anaconda3\envs\golbin_tf\lib\site-packages\flask\app.py", line 1950, in full_dispatch_request
+    rv = self.dispatch_request()
+  File "C:\ProgramData\Anaconda3\envs\golbin_tf\lib\site-packages\flask\app.py", line 1936, in dispatch_request
+    return self.view_functions[rule.endpoint](**req.view_args)
+TypeError: start() got an unexpected keyword argument 'prj'
+2020-07-23 15:53:11,011 - INFO _internal.py-_log : 192.168.7.83 - - [23/Jul/2020 15:53:11] "[35m[1mGET /proc/start/prj=p001/work=w01/step=3 HTTP/1.1[0m" 500 -
+2020-07-23 15:54:06,549 - INFO _internal.py-_log :  * Running on http://0.0.0.0:9364/ (Press CTRL+C to quit)
+2020-07-23 15:54:08,508 - INFO _internal.py-_log : 192.168.7.83 - - [23/Jul/2020 15:54:08] "[37mGET /proc/start/prj=p001/work=w01/step=3 HTTP/1.1[0m" 200 -
+2020-07-23 15:55:03,057 - INFO _internal.py-_log :  * Running on http://0.0.0.0:9364/ (Press CTRL+C to quit)
+2020-07-23 15:55:06,666 - INFO _internal.py-_log : 192.168.7.83 - - [23/Jul/2020 15:55:06] "[33mGET /proc/start/prj=p001/work=w01/step=3/ HTTP/1.1[0m" 404 -
+2020-07-23 15:55:11,761 - INFO _internal.py-_log : 192.168.7.83 - - [23/Jul/2020 15:55:11] "[37mGET /proc/start/prj=p001/work=w01/step=3 HTTP/1.1[0m" 200 -
+2020-07-23 15:55:30,905 - INFO _internal.py-_log : 192.168.7.83 - - [23/Jul/2020 15:55:30] "[37mGET /proc/kill/prj=p001/work=w01/step=3 HTTP/1.1[0m" 200 -
+2020-07-23 15:57:08,139 - INFO _internal.py-_log : 192.168.7.83 - - [23/Jul/2020 15:57:08] "[37mGET /queue/list HTTP/1.1[0m" 200 -
+2020-07-23 17:37:18,576 - INFO _internal.py-_log : 192.168.7.83 - - [23/Jul/2020 17:37:18] "[37mGET /proc/list HTTP/1.1[0m" 200 -
