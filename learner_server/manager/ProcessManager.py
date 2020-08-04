@@ -1,7 +1,7 @@
 # -*- coding: utf-8 -*-
 
 from ..common import SingletonInstance
-from ..dao import AbstractSession, QueueDAO, ProcessesDAO
+from ..dao import AbstractSession, ProcessDAO
 from ..processor import Learner
 from ..configs import ApplicationConfiguration
 
@@ -12,7 +12,7 @@ from multiprocessing import Process
 
 class ProcessManager(SingletonInstance):
     """
-
+    Available for Both of WebApp and Cron-Monitor
     """
 
     def __init__(self):
@@ -26,15 +26,23 @@ class ProcessManager(SingletonInstance):
     def is_available(self) -> bool:
         pass
 
-    def get_queue_list(self, session: AbstractSession):
-        queue_dao: QueueDAO = QueueDAO.instance()
-        queue_list = QueueDAO.map(queue_dao.select_queue_list(session=session))
+    @classmethod
+    def get_queue_list(cls, session: AbstractSession):
+        processes_dao: ProcessDAO = ProcessDAO.instance()
+        queue_list = ProcessDAO.map(processes_dao.select_queue_list(session=session))
         return queue_list
 
-    def get_process_list(self, session: AbstractSession):
-        processes_dao: ProcessesDAO = ProcessesDAO.instance()
-        process_list = ProcessesDAO.map(processes_dao.select_process_list(session=session))
+    @classmethod
+    def get_process_list(cls, session: AbstractSession):
+        processes_dao: ProcessDAO = ProcessDAO.instance()
+        process_list = ProcessDAO.map(processes_dao.select_process_list(session=session))
         return process_list
+
+    @classmethod
+    def get_status_list(cls, session: AbstractSession):
+        process_dao: ProcessDAO = ProcessDAO.instance()
+        status_list = process_dao.map(process_dao.select(session=session))
+        return status_list
 
     def get_process_info(self):
         pass

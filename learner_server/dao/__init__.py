@@ -3,8 +3,7 @@ from .AbstractDAO import AbstractDAO
 from .AbstractDataSource import AbstractDataSource
 from .AbstractSession import AbstractSession
 from .CommonCodeDAO import CommonCodeDAO
-from .QueueDAO import QueueDAO
-from .ProcessesDAO import ProcessesDAO
+from .ProcessDAO import ProcessDAO
 from .OracleDataSource import OracleDataSource
 from .OracleSqlSession import OracleSqlSession
 
@@ -14,8 +13,7 @@ __all__ = [
     'AbstractDataSource',
     'AbstractSession',
     'CommonCodeDAO',
-    'QueueDAO',
-    'ProcessesDAO',
+    'ProcessDAO',
     'OracleDataSource',
     'OracleSqlSession'
 ]

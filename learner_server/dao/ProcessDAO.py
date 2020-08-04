@@ -2,13 +2,15 @@ from ..common import SingletonInstance
 from . import AbstractDAO, AbstractSession
 
 
-class QueueDAO(AbstractDAO, SingletonInstance):
+class ProcessDAO(AbstractDAO, SingletonInstance):
     """
     Demand Data Access Object
     """
 
     def select(self, session: AbstractSession, **params):
-        pass
+        return session.select("SELECT * "
+                              "FROM PROCESS "
+                              "ORDER BY DATE_REQ", params)
 
     def select_one(self, session: AbstractSession, **params):
         """
@@ -26,7 +28,22 @@ class QueueDAO(AbstractDAO, SingletonInstance):
         :param params: SQL Parameter Data
         :return: {"columns" : columns, "data" : list}
         """
-        return session.select("SELECT * FROM QUEUE", params)
+        return session.select("SELECT * "
+                              "FROM PROCESS "
+                              "WHERE STATUS = \"QUEUE\" "
+                              "ORDER BY DATE_REQ", params)
+
+    def select_process_list(self, session: AbstractSession, **params):
+        """
+        세션 인스턴스를 통해 Data Source로 부터 list 데이터 조회
+        :param session: AbstractSession Instance
+        :param params: SQL Parameter Data
+        :return: {"columns" : columns, "data" : list}
+        """
+        return session.select("SELECT * "
+                              "FROM PROCESS "
+                              "WHERE STATUS = \"PROC\""
+                              "ORDER BY DATE_REQ", params)
 
     def execute(self, session: AbstractSession, sql_template: str, data_list: list):
         """

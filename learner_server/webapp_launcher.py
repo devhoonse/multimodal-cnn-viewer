@@ -7,7 +7,7 @@ from learner_server.dao import OracleDataSource
 from learner_server import WebApplication
 
 
-def main():
+def launch_webapp():
 
     config: ApplicationConfiguration = ApplicationConfiguration.instance()
     config.init('./configs/config.properties')
@@ -39,4 +39,4 @@ def main():
 
 
 if __name__ == '__main__':
-    main()
+    launch_webapp()
