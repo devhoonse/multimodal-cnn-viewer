@@ -8,6 +8,9 @@ class ProcessDAO(AbstractDAO, SingletonInstance):
     """
 
     def select(self, session: AbstractSession, **params):
+        """
+        Query the Entire Situation
+        """
         return session.select("SELECT * "
                               "FROM PROCESS "
                               "ORDER BY DATE_REQ", params)
@@ -30,7 +33,7 @@ class ProcessDAO(AbstractDAO, SingletonInstance):
         """
         return session.select("SELECT * "
                               "FROM PROCESS "
-                              "WHERE STATUS = \"QUEUE\" "
+                              "WHERE STATUS = 'QUEUE' "
                               "ORDER BY DATE_REQ", params)
 
     def select_process_list(self, session: AbstractSession, **params):
@@ -42,8 +45,16 @@ class ProcessDAO(AbstractDAO, SingletonInstance):
         """
         return session.select("SELECT * "
                               "FROM PROCESS "
-                              "WHERE STATUS = \"PROC\""
+                              "WHERE STATUS = 'PROC' "
                               "ORDER BY DATE_REQ", params)
+
+    @classmethod
+    def assign_jobs_from_queue(cls, session: AbstractSession, **params):
+        return session.execute("UPDATE PROCESS "
+                               "SET STATUS = 'PROC' "
+                               "WHERE PRJ_ID = :PRJ_ID "
+                               "AND WORK_ID = :WORK_ID "
+                               "AND STEP = :STEP", **params)
 
     def execute(self, session: AbstractSession, sql_template: str, data_list: list):
         """
@@ -53,4 +64,4 @@ class ProcessDAO(AbstractDAO, SingletonInstance):
         :param data_list: CUD 대상 데이터
         :return: True/False
         """
-        pass
+        session.execute(sql_template, data_list)

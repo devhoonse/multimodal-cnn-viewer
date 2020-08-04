@@ -75,7 +75,7 @@ class OracleSqlSession(AbstractSession):
             error_code = error.code
             raise DataSourceError("Oracle database select Error", e, error_code)
 
-    def execute(self, sql_template: str, data_list: list):
+    def executemany(self, sql_template: str, data_list: list):
         """
         CRUD 쿼리문을 실행하는 처리
         :param sql_template: sql template
@@ -88,6 +88,26 @@ class OracleSqlSession(AbstractSession):
         try:
             cursor = self._connection.cursor()
             cursor.executemany(sql_template, data_list)
+            self._connection.commit()
+            return True
+        except cx_Oracle.DatabaseError as e:
+            error, = e.args
+            error_code = error.code
+            print("Row", cursor.rowcount, "has error", error.message)
+            raise DataSourceError("Oracle database execute Error", error_code)
+
+    def execute(self, sql_template: str, **params):
+        """
+        CRUD 쿼리문을 실행하는 처리
+        :param sql_template: sql template
+        :return: True/False : 성공 여부
+        """
+        if self._connection is None:
+            raise DataSourceError('Data Source session is not initialized')
+
+        try:
+            cursor = self._connection.cursor()
+            cursor.execute(sql_template, params)
             self._connection.commit()
             return True
         except cx_Oracle.DatabaseError as e:

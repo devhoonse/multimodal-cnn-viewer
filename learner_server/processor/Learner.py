@@ -14,12 +14,7 @@ class Learner(SingletonInstance):
         self.evaluator = None       # type: Evaluator
         self.predictor = None       # type: Predictor
 
-        self._STEP_MAP: dict = {
-            'STEP01': self.loader.run,
-            'STEP02': self.preprocessor.run,
-            'STEP03': self.evaluator.run,
-            'STEP04': self.predictor.run
-        }
+        self._STEP_MAP: dict = {}
 
     def init(self, parent: ProcessManager, config: ApplicationConfiguration):
         self._parent = parent
@@ -32,6 +27,13 @@ class Learner(SingletonInstance):
         self.preprocessor.init(config)
         self.evaluator.init(config)
         self.predictor.init(config)
+
+        self._STEP_MAP: dict = {
+            'S01': self.loader.run,
+            'S02': self.preprocessor.run,
+            'S03': self.evaluator.run,
+            'S04': self.predictor.run
+        }
 
     def get_target_job(self, step) -> callable:
         return self._STEP_MAP[step]

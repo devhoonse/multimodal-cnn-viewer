@@ -10,4 +10,5 @@ class Loader(SingletonInstance):
         pass
 
     def run(self, *args, **kwargs):
-        pass
+        while True:
+            1 == 1

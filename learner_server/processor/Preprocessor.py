@@ -10,4 +10,5 @@ class Preprocessor(SingletonInstance):
         pass
 
     def run(self, *args, **kwargs):
-        pass
+        while True:
+            1 == 1

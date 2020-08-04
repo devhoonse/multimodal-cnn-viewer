@@ -37,6 +37,15 @@ class AbstractSession(metaclass=ABCMeta):
         """
 
     @abstractmethod
+    def executemany(self, sql_template: str, data_list: list):
+        """
+        CRUD 쿼리문을 실행하는 처리 ( executemany ver )
+        :param sql_template: sql template
+        :param data_list:  CUD 대상 데이터
+        :return: True/False : 성공 여부
+        """
+
+    @abstractmethod
     def execute(self, sql_template: str, data_list: list):
         """
         CRUD 쿼리문을 실행하는 처리
