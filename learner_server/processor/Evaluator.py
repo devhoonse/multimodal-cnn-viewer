@@ -1,13 +1,14 @@
-from ..common import SingletonInstance
+
+from . import AbstractProcessor
 from ..configs import ApplicationConfiguration
 
+from multiprocessing import Lock
 
-class Evaluator(SingletonInstance):
+
+class Evaluator(AbstractProcessor):
     def __init__(self):
-        pass
-
-    def init(self, config: ApplicationConfiguration):
-        pass
+        super(Evaluator, self).__init__()
 
     def run(self, *args, **kwargs):
-        pass
+        while True:
+            1 == 1

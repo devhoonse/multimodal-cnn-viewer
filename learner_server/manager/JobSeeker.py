@@ -35,6 +35,6 @@ class JobSeeker(SingletonInstance):
     def start_process(self):
         process_manager = ProcessManager.instance()
         if self._exists_new_in_queue():
-            process_manager.start_process()
+            process_manager.run_process()
 
 

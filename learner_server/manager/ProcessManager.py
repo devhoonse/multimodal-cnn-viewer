@@ -7,10 +7,12 @@ from ..utils import JsonParser
 from ..processor import Learner
 
 import os
+import sys
 import signal
 import psutil   # Fixme: 3rd-Party Dependency
 import re
-from multiprocessing import Process
+from multiprocessing import Process, Lock
+import subprocess
 
 
 class ProcessManager(SingletonInstance):
@@ -28,7 +30,7 @@ class ProcessManager(SingletonInstance):
     def init(self, config: ApplicationConfiguration):
         self.max_processes = int(config.find('Server', 'process.max'))
         self._learner = Learner.instance()
-        self._learner.init(self, config)
+        self._learner.init(self)
 
     def is_available(self, session: AbstractSession) -> bool:
         availability: bool = len(self.__class__.get_process_list(session)) <= self.max_processes
@@ -94,6 +96,7 @@ class ProcessManager(SingletonInstance):
         """
         Todo: Fill this Function
         """
+        processes_started: list = []
         processes_todo: list = self.get_not_executed_processes(session)
         for new_process_info in processes_todo:
             prj_id: str = new_process_info['PRJ_ID']
@@ -105,7 +108,10 @@ class ProcessManager(SingletonInstance):
             if param_object:
                 params = JsonParser.parse_blob(param_object)
 
-            self.start_process(session, prj_id=prj_id, work_id=work_id, step=step, **params)
+            processes_started.append(
+                self.run_process(session, prj_id=prj_id, work_id=work_id, step=step, **params)
+            )
+        return processes_started
 
     def search_current_processes(self):
         """
@@ -123,7 +129,7 @@ class ProcessManager(SingletonInstance):
                 if not process_info:
                     continue
                 current_processes.append(process_info)
-            except (psutil.NoSuchProcess, psutil.AccessDenied, psutil.ZombieProcess) as e:  # 예외처리
+            except (psutil.NoSuchProcess, psutil.AccessDenied, psutil.ZombieProcess) as e:
                 raise e
 
         return current_processes
@@ -131,17 +137,14 @@ class ProcessManager(SingletonInstance):
     def get_process_info(self):
         pass
 
-    def start_process(self, session: AbstractSession, prj_id: str, work_id: str, step: str, **kwargs):
-        result: str
+    def run_process(self, session: AbstractSession, prj_id: str, work_id: str, step: str, **kwargs):
 
         if self.is_available(session):
-            pname, pid = self._create_process(prj_id, work_id, step, **kwargs)
-            result = f"PNAME = {pname} / PID = {pid}"
+            pname, pid = self._create_subprocess(prj_id, work_id, step, **kwargs)
+            return pname, pid
         else:
-            result = f"QUEUE"
-
-        log_msg: str = f"REQUEST - start {prj_id} / {work_id} / {step} -> {result}"
-        return log_msg
+            # No More Rooms Available for Process
+            pass
 
     def kill_process(self, prj, work, step):
         log_msg: str = f"REQUEST - kill {prj} / {work} / {step}"
@@ -159,12 +162,23 @@ class ProcessManager(SingletonInstance):
         """
         pass
 
-    def _create_process(self, prj_id: str, work_id: str, step: str, **kwargs):
+    def _create_multiprocess(self, prj_id: str, work_id: str, step: str, **kwargs):
         target_function: callable = self._learner.get_target_job(step)
         pname: str = self.FORM_PNAME.format(prj_id, work_id, step)
-        proc = Process(target=target_function, kwargs=kwargs)
+        # kwargs.update({'lock': Lock()})
+        proc = Process(target=target_function, name=pname, kwargs=kwargs)
         proc.start()
-        proc.name = pname
+        return pname, proc.pid
+
+    def _create_subprocess(self, prj_id: str, work_id: str, step: str, **kwargs):
+        pname: str = self.FORM_PNAME.format(prj_id, work_id, step)
+        cmd: list = ['nohup', sys.executable, os.path.join(os.path.dirname(__file__), 'spawn_process.py')]
+        kwargs.update({'--step': step})    # for Testing
+        for key, val in kwargs.items():
+            cmd.extend(
+                [f"--{key.lower()}", val]
+            )
+        proc = subprocess.Popen(cmd)
         return pname, proc.pid
 
     def _search_process(self, prj, work, step):
@@ -177,9 +191,6 @@ class ProcessManager(SingletonInstance):
         pass
 
     def _parse_pname(self, pname: str):
-        prj_id: str = ''
-        work_id: str = ''
-        step: str = ''
         regex_search = re.search(self.REGEX_PNAME, pname)
         if regex_search:
             prj_id, work_id, step = regex_search.groups()

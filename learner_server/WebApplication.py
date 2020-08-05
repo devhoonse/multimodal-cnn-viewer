@@ -73,7 +73,7 @@ class WebApplication(SingletonInstance):
         # 1. start 요청 URL 에 대한 동작 정의
         @self.app.route(self._url_proc_start)
         def start(prj: str, work: str, step: str):
-            return self.process_manager.start_process(prj, work, step)
+            return self.process_manager.run_process(prj, work, step)
 
         # 2. kill 요청 URL 에 대한 동작 정의
         @self.app.route(self._url_proc_kill)

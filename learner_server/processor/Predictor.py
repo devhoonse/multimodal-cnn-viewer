@@ -1,13 +1,13 @@
-from ..common import SingletonInstance
+
+from . import AbstractProcessor
 from ..configs import ApplicationConfiguration
 
+from multiprocessing import Lock
 
-class Predictor(SingletonInstance):
+
+class Predictor(AbstractProcessor):
     def __init__(self):
-        pass
-
-    def init(self, config: ApplicationConfiguration):
-        pass
+        super(Predictor, self).__init__()
 
     def run(self, *args, **kwargs):
         while True:

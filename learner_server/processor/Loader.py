@@ -1,13 +1,13 @@
-from ..common import SingletonInstance
+
 from ..configs import ApplicationConfiguration
+from . import AbstractProcessor
+
+from multiprocessing import Lock
 
 
-class Loader(SingletonInstance):
+class Loader(AbstractProcessor):
     def __init__(self):
-        pass
-
-    def init(self, config: ApplicationConfiguration):
-        pass
+        super(Loader, self).__init__()
 
     def run(self, *args, **kwargs):
         while True:

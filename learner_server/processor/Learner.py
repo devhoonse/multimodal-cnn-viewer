@@ -7,6 +7,10 @@ from ..processor import *
 
 
 class Learner(SingletonInstance):
+    """
+    Maybe.. it would be deprecated...
+    """
+
     def __init__(self):
         self._parent = None         # type: ProcessManager
         self.loader = None          # type: Loader
@@ -16,17 +20,12 @@ class Learner(SingletonInstance):
 
         self._STEP_MAP: dict = {}
 
-    def init(self, parent: ProcessManager, config: ApplicationConfiguration):
+    def init(self, parent: ProcessManager = None):
         self._parent = parent
         self.loader = Loader.instance()
         self.preprocessor = Preprocessor.instance()
         self.evaluator = Evaluator.instance()
         self.predictor = Predictor.instance()
-
-        self.loader.init(config)
-        self.preprocessor.init(config)
-        self.evaluator.init(config)
-        self.predictor.init(config)
 
         self._STEP_MAP: dict = {
             'S01': self.loader.run,
@@ -37,15 +36,3 @@ class Learner(SingletonInstance):
 
     def get_target_job(self, step) -> callable:
         return self._STEP_MAP[step]
-
-    def load_data(self, *args, **kwargs):
-        pass
-
-    def preprocess_data(self, *args, **kwargs):
-        pass
-
-    def fit_model(self, *args, **kwargs):
-        pass
-
-    def predict_data(self, *args, **kwargs):
-        pass
