@@ -3,7 +3,11 @@
 from ..common import SingletonInstance
 from ..configs import ApplicationConfiguration
 from ..manager import ProcessManager
+from ..utils import LogHandler
 from ..processor import *
+
+import logging
+from typing import Dict
 
 
 class Learner(SingletonInstance):
@@ -18,7 +22,7 @@ class Learner(SingletonInstance):
         self.evaluator = None       # type: Evaluator
         self.predictor = None       # type: Predictor
 
-        self._STEP_MAP: dict = {}
+        self._STEP_MAP: Dict[str, AbstractProcessor] = dict()
 
     def init(self, parent: ProcessManager = None):
         self._parent = parent
@@ -27,12 +31,16 @@ class Learner(SingletonInstance):
         self.evaluator = Evaluator.instance()
         self.predictor = Predictor.instance()
 
-        self._STEP_MAP: dict = {
-            'S01': self.loader.run,
-            'S02': self.preprocessor.run,
-            'S03': self.evaluator.run,
-            'S04': self.predictor.run
+        self._STEP_MAP = {
+            'S01': self.loader,
+            'S02': self.preprocessor,
+            'S03': self.evaluator,
+            'S04': self.predictor
         }
 
-    def get_target_job(self, step) -> callable:
-        return self._STEP_MAP[step]
+    def get_target_job(self, step: str) -> callable:
+        return self._STEP_MAP[step].run
+
+    def run(self, step: str, *args, **kwargs):
+        target_job: callable = self.get_target_job(step)
+        target_job(*args, **kwargs)

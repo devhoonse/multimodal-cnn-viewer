@@ -1,0 +1,65 @@
+{
+  "DEFAULT": {
+    "step": {
+      "type": "str",
+      "help": "Which Step You Want to Execute",
+      "default": "S01"
+    }
+  },
+  "S01": {
+    "dt": {
+        "type": "float",
+        "help": "Time step size",
+        "default": 0.4},
+    "T": {
+        "type": "int",
+        "help": "Time steps between outputs",
+        "default": 50},
+    "f": {
+        "type": "str",
+        "help": "Landscape file name",
+        "default": "small.dat"}
+  },
+  "S02": {
+    "dt": {
+        "type": "float",
+        "help": "Time step size",
+        "default": 0.4},
+    "T": {
+        "type": "int",
+        "help": "Time steps between outputs",
+        "default": 50},
+    "f": {
+        "type": "str",
+        "help": "Landscape file name",
+        "default": "small.dat"}
+  },
+  "S03": {
+    "dt": {
+        "type": "float",
+        "help": "Time step size",
+        "default": 0.4},
+    "T": {
+        "type": "int",
+        "help": "Time steps between outputs",
+        "default": 50},
+    "f": {
+        "type": "str",
+        "help": "Landscape file name",
+        "default": "small.dat"}
+  },
+  "S04": {
+    "dt": {
+        "type": "float",
+        "help": "Time step size",
+        "default": 0.4},
+    "T": {
+        "type": "int",
+        "help": "Time steps between outputs",
+        "default": 50},
+    "f": {
+        "type": "str",
+        "help": "Landscape file name",
+        "default": "small.dat"}
+  }
+}
