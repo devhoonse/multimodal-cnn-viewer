@@ -30,14 +30,14 @@ def cron_routine():
     process_manager.assign_jobs_from_queue(session)
 
     # 2. Start Process(es) which are not in processing
-    current_processes: list = process_manager.search_current_processes()
+    current_processes: list = process_manager.search_current_processes(session)
     # not_executed_processes: list = process_manager.get_not_executed_processes(session)
     started_processes: list = process_manager.run_newly_assigned_processes(session)
 
     # 3. Stop Process(es) which are Requested from Web UI
 
     # for Debugging
-    current_processes: list = process_manager.search_current_processes()
+    current_processes: list = process_manager.search_current_processes(session)
 
     # X. Close the Database Session
     session.close()

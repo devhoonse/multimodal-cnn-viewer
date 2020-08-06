@@ -51,7 +51,20 @@ class ProcessDAO(AbstractDAO, SingletonInstance):
                               "ORDER BY DATE_REQ", params)
 
     @classmethod
-    def select_cancled_process_list(cls, session: AbstractSession, **params):
+    def select_current_process_list(cls, session: AbstractSession, **params):
+        """
+        세션 인스턴스를 통해 Data Source로 부터 list 데이터 조회
+        :param session: AbstractSession Instance
+        :param params: SQL Parameter Data
+        :return: {"columns" : columns, "data" : list}
+        """
+        return session.select("SELECT PRJ_ID, WORK_ID, STEP "
+                              "FROM PROCESS "
+                              "WHERE HID_PNAME IS NOT NULL "
+                              "ORDER BY DATE_REQ", params)
+
+    @classmethod
+    def select_canceled_process_list(cls, session: AbstractSession, **params):
         """
         세션 인스턴스를 통해 Data Source로 부터 list 데이터 조회
         :param session: AbstractSession Instance
@@ -67,6 +80,17 @@ class ProcessDAO(AbstractDAO, SingletonInstance):
     def assign_jobs_from_queue(cls, session: AbstractSession, **params):
         return session.execute("UPDATE PROCESS "
                                "SET STATUS = 'PROC' "
+                               "WHERE PRJ_ID = :PRJ_ID "
+                               "AND WORK_ID = :WORK_ID "
+                               "AND STEP = :STEP", **params)
+
+    @classmethod
+    def create_subprocess(cls, session: AbstractSession, **params):
+        return session.execute("UPDATE PROCESS "
+                               "SET (HID_PNAME, DATE_START) = "
+                               "( SELECT :PID AS PID"
+                               "       , :DATE_START AS DATE_START"
+                               "  FROM DUAL)"
                                "WHERE PRJ_ID = :PRJ_ID "
                                "AND WORK_ID = :WORK_ID "
                                "AND STEP = :STEP", **params)

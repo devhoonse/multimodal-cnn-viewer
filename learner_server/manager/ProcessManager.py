@@ -3,11 +3,12 @@
 from ..common import SingletonInstance
 from ..configs import ApplicationConfiguration
 from ..dao import AbstractSession, ProcessDAO, ParametersDAO
-from ..utils import JsonParser
+from ..utils import JsonParser, DateTimeUtility
 from ..processor import Learner
 
 import os
 import sys
+import datetime
 import signal
 import psutil   # Fixme: 3rd-Party Dependency
 import re
@@ -43,7 +44,7 @@ class ProcessManager(SingletonInstance):
         Not Actual Execution
         Limitation of Maximum Number of Processes are Regarded Here
         """
-        while self.is_available(session) and len(self.__class__.get_queue_list(session)):
+        while self.is_available(session) and len(self.get_queue_list(session)):
             first_queue: dict = self.__class__.get_queue_list(session)[0]
             process_key: dict = {
                 'PRJ_ID': first_queue['PRJ_ID'],
@@ -71,8 +72,8 @@ class ProcessManager(SingletonInstance):
         return status_list
 
     def get_not_executed_processes(self, session) -> list:
-        processes_list: list = self.__class__.get_process_list(session)
-        processes_current: list = self.search_current_processes()
+        processes_list: list = self.get_process_list(session)
+        processes_current: list = self.search_current_processes(session)
         processes_todo: list = list(filter(
             lambda info_dict: {'PRJ_ID': info_dict['PRJ_ID'],
                                'WORK_ID': info_dict['WORK_ID'],
@@ -113,24 +114,30 @@ class ProcessManager(SingletonInstance):
             )
         return processes_started
 
-    def search_current_processes(self):
+    def search_current_processes(self, session: AbstractSession):
         """
         https://c0mb.tistory.com/115
         No Need for Data Access Object Session
         Just Need to Know the Running Processes on this Server
         """
 
-        current_processes: list = []
-        for proc in psutil.process_iter():
-            try:
-                process_name = proc.name()
-                process_id = proc.pid
-                process_info = self._parse_pname(process_name)
-                if not process_info:
-                    continue
-                current_processes.append(process_info)
-            except (psutil.NoSuchProcess, psutil.AccessDenied, psutil.ZombieProcess) as e:
-                raise e
+        current_processes: list = ProcessDAO.map(
+            ProcessDAO.select_current_process_list(session)
+        )
+
+        # Searching for Zombie Process
+        # current_processes: list = []
+        # for proc in psutil.process_iter():
+        #     try:
+        #         pinfo: dict = proc.as_dict(attrs=['pid', 'name', 'create_time'])
+        #         process_name = pinfo['name']
+        #         process_id = pinfo['pid']
+        #         process_info = self._parse_pname(process_name)
+        #         if not process_info:
+        #             continue
+        #         current_processes.append(process_info)
+        #     except (psutil.NoSuchProcess, psutil.AccessDenied, psutil.ZombieProcess) as e:
+        #         raise e
 
         return current_processes
 
@@ -140,7 +147,7 @@ class ProcessManager(SingletonInstance):
     def run_process(self, session: AbstractSession, prj_id: str, work_id: str, step: str, **kwargs):
 
         if self.is_available(session):
-            pname, pid = self._create_subprocess(prj_id, work_id, step, **kwargs)
+            pname, pid = self._create_subprocess(session, prj_id, work_id, step, **kwargs)
             return pname, pid
         else:
             # No More Rooms Available for Process
@@ -170,15 +177,21 @@ class ProcessManager(SingletonInstance):
         proc.start()
         return pname, proc.pid
 
-    def _create_subprocess(self, prj_id: str, work_id: str, step: str, **kwargs):
+    def _create_subprocess(self, session: AbstractSession, prj_id: str, work_id: str, step: str, **kwargs):
         pname: str = self.FORM_PNAME.format(prj_id, work_id, step)
         cmd: list = ['nohup', sys.executable, os.path.join(os.path.dirname(__file__), 'spawn_process.py')]
-        kwargs.update({'--step': step})    # for Testing
-        for key, val in kwargs.items():
+        kwargs.update({'step': step})    # for Testing
+        for argname, val in kwargs.items():
             cmd.extend(
-                [f"--{key.lower()}", val]
+                [f"--{argname.lower()}", val]
             )
         proc = subprocess.Popen(cmd)
+        ProcessDAO.create_subprocess(session,
+                                     DATE_START=DateTimeUtility.get_current_time_str(),
+                                     PID=proc.pid,
+                                     PRJ_ID=prj_id,
+                                     WORK_ID=work_id,
+                                     STEP=step)
         return pname, proc.pid
 
     def _search_process(self, prj, work, step):

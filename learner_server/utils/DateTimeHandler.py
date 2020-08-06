@@ -42,6 +42,10 @@ class DateTimeUtility:
         return DateTimeUtility._TIME_UNIT_TYPES[uom]
 
     @classmethod
+    def get_current_time_str(cls, fmt: str = "%Y%m%d%H%M%S"):
+        return datetime.datetime.now().strftime(fmt)
+
+    @classmethod
     def convert_str_to_date(cls, date_string: str, fmt: str = "%Y%m%d%H%M%S"):
         """
         문자열 형식으로 주어진 날짜 정보를 datetime.datetime 객체로 변환하여 반환합니다.
