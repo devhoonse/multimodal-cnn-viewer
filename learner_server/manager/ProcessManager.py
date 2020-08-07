@@ -236,7 +236,10 @@ class ProcessManager(SingletonInstance):
             cmd.extend(
                 [f"--{argname.lower()}", val]
             )
-        proc = subprocess.Popen(cmd, start_new_session=True)
+        with open('/dev/null', 'w') as stdout, open('/dev/null', 'a') as stderr:
+            subprocess.Popen(['my', 'command'], stdout=stdout, stderr=stderr)
+        proc = subprocess.Popen(cmd,
+                                start_new_session=True)
         ProcessDAO.create_subprocess(session,
                                      DATE_START=DateTimeUtility.get_current_time_str(),
                                      PID=proc.pid,
