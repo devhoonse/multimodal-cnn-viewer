@@ -12,8 +12,9 @@ import datetime
 import signal
 import psutil   # Fixme: 3rd-Party Dependency
 import re
-from multiprocessing import Process, Lock
 import subprocess
+from multiprocessing import Process, Lock
+from collections import OrderedDict
 
 
 class ProcessManager(SingletonInstance):
@@ -34,7 +35,7 @@ class ProcessManager(SingletonInstance):
         self._learner.init(self)
 
     def is_available(self, session: AbstractSession) -> bool:
-        availability: bool = len(self.__class__.get_process_list(session)) <= self.max_processes
+        availability: bool = len(self.get_process_list(session)) < self.max_processes
 
         return availability
 
@@ -71,9 +72,13 @@ class ProcessManager(SingletonInstance):
         status_list: list = process_dao.map(process_dao.select(session=session))
         return status_list
 
-    def get_not_executed_processes(self, session) -> list:
-        processes_list: list = self.get_process_list(session)
-        processes_current: list = self.search_current_processes(session)
+    @classmethod
+    def get_not_executed_processes(cls, session: AbstractSession) -> list:
+        """
+        Fixme: No Need to Compare Two Lists Anymore
+        """
+        processes_list: list = cls.get_process_list(session)
+        processes_current: list = cls.search_current_processes(session)
         processes_todo: list = list(filter(
             lambda info_dict: {'PRJ_ID': info_dict['PRJ_ID'],
                                'WORK_ID': info_dict['WORK_ID'],
@@ -84,13 +89,20 @@ class ProcessManager(SingletonInstance):
         return processes_todo
 
     @classmethod
+    def get_canceled_processes(cls, session: AbstractSession) -> list:
+        canceled_processes: list = ProcessDAO.map(
+            ProcessDAO.select_canceled_process_list(session)
+        )
+        return canceled_processes
+
+    @classmethod
     def get_parameter_object(cls, session: AbstractSession, prj_id: str, work_id, step: str):
         parameters_dao = ParametersDAO.instance()
         params = parameters_dao.map(
             parameters_dao.select_params_binary(session, PRJ_ID=prj_id, WORK_ID=work_id, STEP=step)
         )
         if not params:
-            return []
+            return None
         return params[0]['PARAM_OBJECT']
 
     def run_newly_assigned_processes(self, session: AbstractSession):
@@ -114,11 +126,30 @@ class ProcessManager(SingletonInstance):
             )
         return processes_started
 
-    def search_current_processes(self, session: AbstractSession):
+    def cancel_processes(self, session: AbstractSession):
+        """
+        Todo: Fill this Function
+        """
+        processes_canceled: list = []
+        processes_to_cancel: list = self.get_canceled_processes(session)
+        for cancel_process_info in processes_to_cancel:
+            prj_id: str = cancel_process_info['PRJ_ID']
+            work_id: str = cancel_process_info['WORK_ID']
+            step: str = cancel_process_info['STEP']
+            pid: str = cancel_process_info['HID_PNAME']
+
+            os_signal: int = self.kill_process(int(pid))
+            self.cancel_process(session, prj_id=prj_id, work_id=work_id, step=step)
+            if os_signal == 0:
+                processes_canceled.append(
+                    (self.FORM_PNAME.format(prj_id, work_id, step), pid)
+                )
+        return processes_canceled
+
+    @classmethod
+    def search_current_processes(cls, session: AbstractSession):
         """
         https://c0mb.tistory.com/115
-        No Need for Data Access Object Session
-        Just Need to Know the Running Processes on this Server
         """
 
         current_processes: list = ProcessDAO.map(
@@ -145,20 +176,30 @@ class ProcessManager(SingletonInstance):
         pass
 
     def run_process(self, session: AbstractSession, prj_id: str, work_id: str, step: str, **kwargs):
+        """
+        Should Have Already been Checked Availability Outside this Method
+        """
+        pname, pid = self._create_subprocess(session, prj_id, work_id, step, **kwargs)
+        return pname, pid
 
-        if self.is_available(session):
-            pname, pid = self._create_subprocess(session, prj_id, work_id, step, **kwargs)
-            return pname, pid
-        else:
-            # No More Rooms Available for Process
-            pass
+    @classmethod
+    def cancel_process(cls, session: AbstractSession, prj_id: str, work_id: str, step: str):
 
-    def kill_process(self, prj, work, step):
-        log_msg: str = f"REQUEST - kill {prj} / {work} / {step}"
+        # Remove PID from PROCESS Table in DataSource
+        ProcessDAO.cancel_subprocess(session,
+                                     DATE_END=DateTimeUtility.get_current_time_str(),
+                                     PRJ_ID=prj_id,
+                                     WORK_ID=work_id,
+                                     STEP=step)
 
-        pid: int = self._get_requested_pid(prj, work, step)
-        os.kill(pid, signal.SIGSTOP)
-        return log_msg
+    @classmethod
+    def kill_process(cls, pid: int):
+        try:
+            os.kill(pid, signal.SIGSTOP)
+            return 0
+        except ProcessLookupError as e:
+            print(e)    # Todo: log this
+            return 1
 
     def receive_progression(self, msg):
         """
@@ -170,6 +211,9 @@ class ProcessManager(SingletonInstance):
         pass
 
     def _create_multiprocess(self, prj_id: str, work_id: str, step: str, **kwargs):
+        """
+        Process Creator with Actual Callable Object
+        """
         target_function: callable = self._learner.get_target_job(step)
         pname: str = self.FORM_PNAME.format(prj_id, work_id, step)
         # kwargs.update({'lock': Lock()})
@@ -177,15 +221,22 @@ class ProcessManager(SingletonInstance):
         proc.start()
         return pname, proc.pid
 
-    def _create_subprocess(self, session: AbstractSession, prj_id: str, work_id: str, step: str, **kwargs):
-        pname: str = self.FORM_PNAME.format(prj_id, work_id, step)
+    @classmethod
+    def _create_subprocess(cls, session: AbstractSession, prj_id: str, work_id: str, step: str, **kwargs):
+        """
+        Process Creator with Command-Line (calling spawn_process.py)
+        """
+        pname: str = cls.FORM_PNAME.format(prj_id, work_id, step)
         cmd: list = ['nohup', sys.executable, os.path.join(os.path.dirname(__file__), 'spawn_process.py')]
-        kwargs.update({'step': step})    # for Testing
-        for argname, val in kwargs.items():
+        cmd_args: OrderedDict = OrderedDict()
+        cmd_args.update({'step': step})
+        for key, value in kwargs.items():
+            cmd_args.update({key: value})
+        for argname, val in cmd_args.items():
             cmd.extend(
                 [f"--{argname.lower()}", val]
             )
-        proc = subprocess.Popen(cmd)
+        proc = subprocess.Popen(cmd, start_new_session=True)
         ProcessDAO.create_subprocess(session,
                                      DATE_START=DateTimeUtility.get_current_time_str(),
                                      PID=proc.pid,
@@ -193,6 +244,13 @@ class ProcessManager(SingletonInstance):
                                      WORK_ID=work_id,
                                      STEP=step)
         return pname, proc.pid
+
+    @classmethod
+    def _ignore_parents_signal(cls):
+        """
+        Callable to Make Subprocess Not End with Parent Processes Signal
+        """
+        signal.signal(signal.SIGINT, signal.SIG_IGN)
 
     def _search_process(self, prj, work, step):
         pass

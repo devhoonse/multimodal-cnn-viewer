@@ -3,3 +3,6 @@
         Not a Running Process
     -> For Process Identification, PID is needed
     -> [PID] Field Should be Added to PROCESS Table
+
+2. configs/args.json
+    - Should be Defined (argument definitions for argparser)

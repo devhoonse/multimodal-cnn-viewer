@@ -10,5 +10,5 @@ class Preprocessor(AbstractProcessor):
         super(Preprocessor, self).__init__()
 
     def run(self, *args, **kwargs):
-        while True:
-            1 == 1
+        print(self.__class__.run)  # for debugging
+        super(Preprocessor, self).run(*args, **kwargs)

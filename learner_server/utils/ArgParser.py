@@ -2,6 +2,7 @@
 
 from ..common import SingletonInstance
 from ..configs import ApplicationConfiguration
+from .BuiltinHandler import BuiltinHandler
 
 from typing import Dict, Any
 import json
@@ -25,8 +26,11 @@ class ArgParser(SingletonInstance):
             self.parsers[step] = argparse.ArgumentParser()
             self.parsers[step].formatter_class = argparse.ArgumentDefaultsHelpFormatter
             for key, value in definition[step].items():
-                # '--%s' % key, type=allowed[value["type"], help = value["help"], default = value["default"]
-                self.parsers[step].add_argument(f'--{key}', type=value["type"], help=value["help"], default=value["default"])
+                type_object: type = BuiltinHandler.get_builtin_type_by_name(value["type"])
+                self.parsers[step].add_argument(f'--{key}',
+                                                type=type_object,
+                                                help=value["help"],
+                                                default=value["default"])
 
-    def get_step_parser(self, step: str):
-        return self.parsers.get(step, None)
+    def get_parser(self, name: str):
+        return self.parsers.get(name, None)

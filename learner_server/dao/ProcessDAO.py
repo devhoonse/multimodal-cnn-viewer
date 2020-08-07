@@ -95,6 +95,17 @@ class ProcessDAO(AbstractDAO, SingletonInstance):
                                "AND WORK_ID = :WORK_ID "
                                "AND STEP = :STEP", **params)
 
+    @classmethod
+    def cancel_subprocess(cls, session: AbstractSession, **params):
+        return session.execute("UPDATE PROCESS "
+                               "SET (HID_PNAME, DATE_END) = "
+                               "( SELECT NULL AS PID"
+                               "       , :DATE_END AS DATE_END"
+                               "  FROM DUAL)"
+                               "WHERE PRJ_ID = :PRJ_ID "
+                               "AND WORK_ID = :WORK_ID "
+                               "AND STEP = :STEP", **params)
+
     def execute(self, session: AbstractSession, sql_template: str, data_list: list):
         """
         세션 인스턴스를 통해 Data Source에 대한 CUD를 실행

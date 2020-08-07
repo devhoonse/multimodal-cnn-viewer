@@ -43,4 +43,5 @@ class Learner(SingletonInstance):
 
     def run(self, step: str, *args, **kwargs):
         target_job: callable = self.get_target_job(step)
+        print(f"step = {step} / {target_job}")
         target_job(*args, **kwargs)

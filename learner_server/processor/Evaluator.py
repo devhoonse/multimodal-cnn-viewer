@@ -10,5 +10,5 @@ class Evaluator(AbstractProcessor):
         super(Evaluator, self).__init__()
 
     def run(self, *args, **kwargs):
-        while True:
-            1 == 1
+        print(self.__class__.run)   # for debugging
+        super(Evaluator, self).run(*args, **kwargs)

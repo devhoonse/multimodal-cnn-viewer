@@ -10,5 +10,5 @@ class Predictor(AbstractProcessor):
         super(Predictor, self).__init__()
 
     def run(self, *args, **kwargs):
-        while True:
-            1 == 1
+        print(self.__class__.run)  # for debugging
+        super(Predictor, self).run(*args, **kwargs)

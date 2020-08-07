@@ -11,4 +11,9 @@ class AbstractProcessor(SingletonInstance):
 
     @abstractmethod
     def run(self,  *args, **kwargs):
-        pass
+        print(f"<args>")
+        print(args)
+        print(f"<kwargs>")
+        print(kwargs)
+        while True:
+            1 == 1

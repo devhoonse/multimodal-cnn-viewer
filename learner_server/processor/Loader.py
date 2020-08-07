@@ -10,5 +10,5 @@ class Loader(AbstractProcessor):
         super(Loader, self).__init__()
 
     def run(self, *args, **kwargs):
-        while True:
-            1 == 1
+        print(self.__class__.run)  # for debugging
+        super(Loader, self).run(*args, **kwargs)
