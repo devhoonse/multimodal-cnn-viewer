@@ -29,11 +29,11 @@ def cron_routine():
     # 1. Assign Jobs from Queue to Process
     process_manager.assign_jobs_from_queue(session)
 
-    # 2. Start Process(es) which are not in processing
-    started_processes: list = process_manager.run_newly_assigned_processes(session)
+    # 2. Stop Process(es) which are Requested from Web UI
+    canceled_processes: list = process_manager.cancel_processes(session)
 
-    # 3. Stop Process(es) which are Requested from Web UI
-    cancled_processes: list = process_manager.cancel_processes(session)
+    # 3. Start Process(es) which are not in processing
+    started_processes: list = process_manager.run_newly_assigned_processes(session)
 
     # for Debugging
     current_processes: list = process_manager.search_current_processes(session)

@@ -27,10 +27,14 @@ class ProcessManager(SingletonInstance):
 
     def __init__(self):
         self.max_processes: int = 1
+        self.path_std_out: str = ''
+        self.path_std_err: str = ''
         self._learner: Learner = None
 
     def init(self, config: ApplicationConfiguration):
         self.max_processes = int(config.find('Server', 'process.max'))
+        self.path_std_out = config.find('Logging', 'std.out')
+        self.path_std_err = config.find('Logging', 'std.err')
         self._learner = Learner.instance()
         self._learner.init(self)
 
@@ -136,11 +140,16 @@ class ProcessManager(SingletonInstance):
             prj_id: str = cancel_process_info['PRJ_ID']
             work_id: str = cancel_process_info['WORK_ID']
             step: str = cancel_process_info['STEP']
+            end_time: str = cancel_process_info['DATE_END']
             pid: str = cancel_process_info['HID_PNAME']
 
+            if end_time:
+                continue
+
             os_signal: int = self.kill_process(int(pid))
-            self.cancel_process(session, prj_id=prj_id, work_id=work_id, step=step)
+            self.send_cancel_process(session, prj_id=prj_id, work_id=work_id, step=step)
             if os_signal == 0:
+                # print(f"PID={pid} Has been Canceled")
                 processes_canceled.append(
                     (self.FORM_PNAME.format(prj_id, work_id, step), pid)
                 )
@@ -183,7 +192,7 @@ class ProcessManager(SingletonInstance):
         return pname, pid
 
     @classmethod
-    def cancel_process(cls, session: AbstractSession, prj_id: str, work_id: str, step: str):
+    def send_cancel_process(cls, session: AbstractSession, prj_id: str, work_id: str, step: str):
 
         # Remove PID from PROCESS Table in DataSource
         ProcessDAO.cancel_subprocess(session,
@@ -195,7 +204,7 @@ class ProcessManager(SingletonInstance):
     @classmethod
     def kill_process(cls, pid: int):
         try:
-            os.kill(pid, signal.SIGSTOP)
+            os.kill(pid, signal.SIGKILL)
             return 0
         except ProcessLookupError as e:
             print(e)    # Todo: log this
@@ -221,12 +230,11 @@ class ProcessManager(SingletonInstance):
         proc.start()
         return pname, proc.pid
 
-    @classmethod
-    def _create_subprocess(cls, session: AbstractSession, prj_id: str, work_id: str, step: str, **kwargs):
+    def _create_subprocess(self, session: AbstractSession, prj_id: str, work_id: str, step: str, **kwargs):
         """
         Process Creator with Command-Line (calling spawn_process.py)
         """
-        pname: str = cls.FORM_PNAME.format(prj_id, work_id, step)
+        pname: str = self.FORM_PNAME.format(prj_id, work_id, step)
         cmd: list = ['nohup', sys.executable, os.path.join(os.path.dirname(__file__), 'spawn_process.py')]
         cmd_args: OrderedDict = OrderedDict()
         cmd_args.update({'step': step})
@@ -236,10 +244,14 @@ class ProcessManager(SingletonInstance):
             cmd.extend(
                 [f"--{argname.lower()}", val]
             )
-        with open('/dev/null', 'w') as stdout, open('/dev/null', 'a') as stderr:
-            subprocess.Popen(['my', 'command'], stdout=stdout, stderr=stderr)
-        proc = subprocess.Popen(cmd,
-                                start_new_session=True)
+        with open(self.path_std_out, 'a') as stdout, \
+             open(self.path_std_err, 'a') as stderr:
+            proc = subprocess.Popen(cmd, stdout=stdout, stderr=stderr,
+                                    start_new_session=True)
+        # proc = subprocess.Popen(cmd,
+        #                         # preexec_fn=os.setpgrp,
+        #                         # preexec_fn=cls._ignore_parents_signal,
+        #                         start_new_session=True)
         ProcessDAO.create_subprocess(session,
                                      DATE_START=DateTimeUtility.get_current_time_str(),
                                      PID=proc.pid,
