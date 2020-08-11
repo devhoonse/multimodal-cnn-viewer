@@ -6,3 +6,6 @@
 
 2. configs/args.json
     - Should be Defined (argument definitions for argparser)
+
+3. Logger Module 의 사용처들이 정의되어야 합니다
+    - INFO, DEBUG, ERROR 등 등급에 따라

@@ -19,7 +19,7 @@ from collections import OrderedDict
 
 class ProcessManager(SingletonInstance):
     """
-    Available for Both of WebApp and Cron-Monitor
+    Available for Both of WebApp and Cron-Process-Monitor
     """
 
     REGEX_PNAME: str = r'^LEARNER[:][<](.*)[>][_][<](.*)[>]_[<](.*)[>]'
@@ -165,7 +165,7 @@ class ProcessManager(SingletonInstance):
             ProcessDAO.select_current_process_list(session)
         )
 
-        # Searching for Zombie Process
+        # Searching for Zombies
         # current_processes: list = []
         # for proc in psutil.process_iter():
         #     try:
@@ -248,10 +248,6 @@ class ProcessManager(SingletonInstance):
              open(self.path_std_err, 'a') as stderr:
             proc = subprocess.Popen(cmd, stdout=stdout, stderr=stderr,
                                     start_new_session=True)
-        # proc = subprocess.Popen(cmd,
-        #                         # preexec_fn=os.setpgrp,
-        #                         # preexec_fn=cls._ignore_parents_signal,
-        #                         start_new_session=True)
         ProcessDAO.create_subprocess(session,
                                      DATE_START=DateTimeUtility.get_current_time_str(),
                                      PID=proc.pid,
