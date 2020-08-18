@@ -18,7 +18,7 @@
       "class": "logging.handlers.TimedRotatingFileHandler",
       "level": "INFO",
       "formatter": "simple",
-      "filename": "../tests/logs/app.log",
+      "filename": "./tests/logs/app.log",
       "when": "midnight",
       "backupCount": "30"
     }

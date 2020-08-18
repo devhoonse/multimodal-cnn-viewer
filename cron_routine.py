@@ -1,5 +1,8 @@
 # -*- coding: utf-8 -*-
 
+# 매 분마다 실행하기
+# [prompt]# crontab -e
+# * * * * * /path/to/python -u ~/cnn/executor/cron_routine.py
 
 from learner_server.configs import ApplicationConfiguration
 from learner_server.utils import LogHandler
@@ -13,7 +16,7 @@ def cron_routine():
     """
 
     config: ApplicationConfiguration = ApplicationConfiguration.instance()
-    config.init('./configs/config.properties')
+    config.init('config.properties')
 
     log_handler: LogHandler = LogHandler.instance()
     log_handler.init(config)

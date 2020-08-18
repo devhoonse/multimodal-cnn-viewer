@@ -1,7 +1,8 @@
 import os
 import configparser
 from ..common import SingletonInstance
-from ..dao import AbstractDataSource,AbstractSession, CommonCodeDAO
+from ..dao import AbstractDataSource, AbstractSession, CommonCodeDAO
+from ..utils import LogHandler
 
 
 class ApplicationConfiguration(SingletonInstance):
@@ -12,10 +13,7 @@ class ApplicationConfiguration(SingletonInstance):
         3. 데이터베이스 코드 정보
     """
     # properties file path : working directory path
-    PROPERTIES_FILE_PATH: str = \
-        os.path.dirname(
-                os.path.dirname(__file__)
-        )
+    PROPERTIES_FILE_PATH: str = os.path.dirname(__file__)
 
     # 어플리케이션 설치 정보, 어플리케이션 initialize 시 db로부터 추가 설정를 add
     _config: configparser.RawConfigParser = None
@@ -29,7 +27,8 @@ class ApplicationConfiguration(SingletonInstance):
         ApplicationConfiguration 초기화
         :param properties_file : 어플리케이션 설치 정보 파일명
         """
-        self._config.read(os.path.join(self.PROPERTIES_FILE_PATH, properties_file))
+        properties_file_path: str = os.path.join(self.PROPERTIES_FILE_PATH, properties_file)
+        self._config.read(properties_file_path)
 
     def find(self, section, name):
         """

@@ -3,14 +3,14 @@
 from ..common import SingletonInstance
 from ..configs import ApplicationConfiguration
 from ..dao import AbstractSession, ProcessDAO, ParametersDAO
-from ..utils import JsonParser, DateTimeUtility
+from ..utils import JsonParser, DateTimeHandler, OSHandler
 from ..processor import Learner
 
 import os
 import sys
 import datetime
 import signal
-import psutil   # Fixme: 3rd-Party Dependency
+# import psutil   # Fixme: 3rd-Party Dependency
 import re
 import subprocess
 from multiprocessing import Process, Lock
@@ -196,7 +196,7 @@ class ProcessManager(SingletonInstance):
 
         # Remove PID from PROCESS Table in DataSource
         ProcessDAO.cancel_subprocess(session,
-                                     DATE_END=DateTimeUtility.get_current_time_str(),
+                                     DATE_END=DateTimeHandler.get_current_time_str(),
                                      PRJ_ID=prj_id,
                                      WORK_ID=work_id,
                                      STEP=step)
@@ -244,12 +244,14 @@ class ProcessManager(SingletonInstance):
             cmd.extend(
                 [f"--{argname.lower()}", val]
             )
+        OSHandler.create_directory(self.path_std_out)
+        OSHandler.create_directory(self.path_std_err)
         with open(self.path_std_out, 'a') as stdout, \
              open(self.path_std_err, 'a') as stderr:
             proc = subprocess.Popen(cmd, stdout=stdout, stderr=stderr,
                                     start_new_session=True)
         ProcessDAO.create_subprocess(session,
-                                     DATE_START=DateTimeUtility.get_current_time_str(),
+                                     DATE_START=DateTimeHandler.get_current_time_str(),
                                      PID=proc.pid,
                                      PRJ_ID=prj_id,
                                      WORK_ID=work_id,

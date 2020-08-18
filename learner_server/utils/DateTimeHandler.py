@@ -5,7 +5,7 @@ import datetime
 from ..configs import ApplicationConfiguration
 
 
-class DateTimeUtility:
+class DateTimeHandler:
     """
     Time Utility
     시간 관련 처리를 위한 유틸리티성 static 메서드들을 정의
@@ -39,7 +39,7 @@ class DateTimeUtility:
         Value 값을 가져오는 메서드 (Key 에 대응되는 datetime.timedelta 의 argument 명칭)
         :return:
         """
-        return DateTimeUtility._TIME_UNIT_TYPES[uom]
+        return DateTimeHandler._TIME_UNIT_TYPES[uom]
 
     @classmethod
     def get_current_time_str(cls, fmt: str = "%Y%m%d%H%M%S"):
