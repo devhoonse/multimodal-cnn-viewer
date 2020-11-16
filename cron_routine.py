@@ -4,6 +4,9 @@
 # [prompt]# crontab -e
 # * * * * * /path/to/python -u ~/cnn/executor/cron_routine.py
 
+# 54번 서버 crontab 설정
+# * * * * * /usr/local/anaconda3/envs/tensorflow/bin/python3.7 /home/istream3/py_codepad/metax_manager/cron_routine.py
+
 from learner_server.configs import ApplicationConfiguration
 from learner_server.utils import LogHandler
 from learner_server.dao import OracleDataSource, AbstractSession
@@ -18,9 +21,9 @@ def cron_routine():
     config: ApplicationConfiguration = ApplicationConfiguration.instance()
     config.init('config.properties')
 
-    log_handler: LogHandler = LogHandler.instance()
-    log_handler.init(config)
-    logger = log_handler.get_logger()
+    # log_handler: LogHandler = LogHandler.instance()
+    # log_handler.init(config)
+    # logger = log_handler.get_logger()
 
     data_source: OracleDataSource = OracleDataSource.instance()     # Todo: Make Available Various Types of Data Sources
     data_source.init(config)

@@ -12,8 +12,8 @@ class ProcessDAO(AbstractDAO, SingletonInstance):
         Query the Entire Situation
         """
         return session.select("SELECT * "
-                              "FROM PROCESS "
-                              "ORDER BY DATE_REQ", params)
+                              "FROM DLP_PRJT_PIPELN "
+                              "ORDER BY RGST_DT_TM", params)
 
     def select_one(self, session: AbstractSession, **params):
         """
@@ -33,9 +33,9 @@ class ProcessDAO(AbstractDAO, SingletonInstance):
         :return: {"columns" : columns, "data" : list}
         """
         return session.select("SELECT * "
-                              "FROM PROCESS "
-                              "WHERE STATUS = 'QUEUE' "
-                              "ORDER BY DATE_REQ", params)
+                              "FROM DLP_PRJT_PIPELN "
+                              "WHERE OP_CD = 'QUEUE' "
+                              "ORDER BY RGST_DT_TM", params)
 
     @classmethod
     def select_process_list(cls, session: AbstractSession, **params):
@@ -46,9 +46,9 @@ class ProcessDAO(AbstractDAO, SingletonInstance):
         :return: {"columns" : columns, "data" : list}
         """
         return session.select("SELECT * "
-                              "FROM PROCESS "
-                              "WHERE STATUS = 'PROC' "
-                              "ORDER BY DATE_REQ", params)
+                              "FROM DLP_PRJT_PIPELN "
+                              "WHERE OP_CD = 'RUNNING' "
+                              "ORDER BY RGST_DT_TM", params)
 
     @classmethod
     def select_current_process_list(cls, session: AbstractSession, **params):
@@ -58,10 +58,10 @@ class ProcessDAO(AbstractDAO, SingletonInstance):
         :param params: SQL Parameter Data
         :return: {"columns" : columns, "data" : list}
         """
-        return session.select("SELECT PRJ_ID, WORK_ID, STEP "
-                              "FROM PROCESS "
-                              "WHERE HID_PNAME IS NOT NULL "
-                              "ORDER BY DATE_REQ", params)
+        return session.select("SELECT MDL_ID, PRJT_ID, PIPELN_ID "
+                              "FROM DLP_PRJT_PIPELN "
+                              "WHERE BAT_OP_ID IS NOT NULL "
+                              "ORDER BY RGST_DT_TM", params)
 
     @classmethod
     def select_canceled_process_list(cls, session: AbstractSession, **params):
@@ -72,39 +72,65 @@ class ProcessDAO(AbstractDAO, SingletonInstance):
         :return: {"columns" : columns, "data" : list}
         """
         return session.select("SELECT * "
-                              "FROM PROCESS "
-                              "WHERE STATUS = 'CANCELED' "
-                              "ORDER BY DATE_REQ", params)
+                              "FROM DLP_PRJT_PIPELN "
+                              "WHERE OP_CD = 'CANCELED' "
+                              "ORDER BY RGST_DT_TM", params)
+
+    @classmethod
+    def select_pipeline_definition(cls, session: AbstractSession, **params):
+        """
+        세션 인스턴스를 통해 Data Source 로부터 현재 모델에 대한 파이프라인 정의를 조회
+        :param session:
+        :param params:
+        :return:
+        """
+        return session.select("SELECT * "
+                              "FROM DLP_PIPELN "
+                              "WHERE MDL_ID = :MDL_ID "
+                              "ORDER BY PIPELN_ID", params)
 
     @classmethod
     def assign_jobs_from_queue(cls, session: AbstractSession, **params):
-        return session.execute("UPDATE PROCESS "
-                               "SET STATUS = 'PROC' "
-                               "WHERE PRJ_ID = :PRJ_ID "
-                               "AND WORK_ID = :WORK_ID "
-                               "AND STEP = :STEP", **params)
+        return session.execute("UPDATE DLP_PRJT_PIPELN "
+                               "SET OP_CD = 'RUNNING' "
+                               "WHERE MDL_ID = :MDL_ID "
+                               "AND PRJT_ID = :PRJT_ID "
+                               "AND PIPELN_ID = :PIPELN_ID", **params)
 
     @classmethod
     def create_subprocess(cls, session: AbstractSession, **params):
-        return session.execute("UPDATE PROCESS "
-                               "SET (HID_PNAME, DATE_START) = "
+        return session.execute("UPDATE DLP_PRJT_PIPELN "
+                               "SET (BAT_OP_ID, START_DT_TM) = "
                                "( SELECT :PID AS PID"
-                               "       , :DATE_START AS DATE_START"
+                               "       , :DATE_START AS START_DT_TM"
                                "  FROM DUAL)"
-                               "WHERE PRJ_ID = :PRJ_ID "
-                               "AND WORK_ID = :WORK_ID "
-                               "AND STEP = :STEP", **params)
+                               "WHERE MDL_ID = :MDL_ID "
+                               "AND PRJT_ID = :PRJT_ID "
+                               "AND PIPELN_ID = :PIPELN_ID ", **params)
+
+    @classmethod
+    def finish_subprocess(cls, session: AbstractSession, **params):
+        return session.execute("UPDATE DLP_PRJT_PIPELN "
+                               "SET (CMPLT_YN, OP_CD, BAT_OP_ID, END_DT_TM) = "
+                               "( SELECT 'Y' AS CMPLT_YN"
+                               "       , 'FINISHED' AS OP_CD"
+                               "       , NULL AS PID"
+                               "       , :END_DT_TM AS END_DT"
+                               "  FROM DUAL)"
+                               "WHERE MDL_ID = :MDL_ID "
+                               "AND PRJT_ID = :PRJT_ID "
+                               "AND PIPELN_ID = :PIPELN_ID", **params)
 
     @classmethod
     def cancel_subprocess(cls, session: AbstractSession, **params):
-        return session.execute("UPDATE PROCESS "
-                               "SET (HID_PNAME, DATE_END) = "
+        return session.execute("UPDATE DLP_PRJT_PIPELN "
+                               "SET (BAT_OP_ID, END_DT_TM) = "
                                "( SELECT NULL AS PID"
-                               "       , :DATE_END AS DATE_END"
+                               "       , :END_DT_TM AS END_DT"
                                "  FROM DUAL)"
-                               "WHERE PRJ_ID = :PRJ_ID "
-                               "AND WORK_ID = :WORK_ID "
-                               "AND STEP = :STEP", **params)
+                               "WHERE MDL_ID = :MDL_ID "
+                               "AND PRJT_ID = :PRJT_ID "
+                               "AND PIPELN_ID = :PIPELN_ID", **params)
 
     def execute(self, session: AbstractSession, sql_template: str, data_list: list):
         """

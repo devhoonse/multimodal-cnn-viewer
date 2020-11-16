@@ -13,10 +13,16 @@ class OSHandler:
     """
 
     @classmethod
-    def create_directory(cls, file_path: str):
+    def create_directory(cls, path_string: str, is_directory=True):
         """
         주어진 file_path 를 저장하기 위해
         저장될 폴더가 없다면 만들어 주는 처리
         """
-        if not os.path.exists(os.path.dirname(file_path)):
-            os.makedirs(os.path.dirname(file_path))
+        target_directory: str
+        if is_directory:
+            target_directory = path_string
+        else:
+            target_directory = os.path.dirname(path_string)
+
+        if not os.path.exists(target_directory):
+            os.makedirs(target_directory)

@@ -30,7 +30,7 @@ class WebApplication(SingletonInstance):
 
         # ./configs/config.properties  로부터 [Server] 섹션 설정값들 불러오기
         server_info = dict(config.find_section('Server'))
-        url_info = dict(config.find_section('URL'))
+        url_info = dict(config.find_section('Router'))
 
         # 인스턴스 변수 초기화
         self.static_url = server_info.get('app.static_url')

@@ -1,6 +1,6 @@
 
 from . import common, configs, dao, manager, processor, utils
-from .WebApplication import WebApplication
+# from .WebApplication import WebApplication
 
 __all__ = [
     'common',
@@ -9,5 +9,5 @@ __all__ = [
     'manager',
     'processor',
     'utils',
-    'WebApplication'
+    # 'WebApplication'
 ]

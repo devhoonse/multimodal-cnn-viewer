@@ -1,66 +1,22 @@
 {
-  "DEFAULT": {
-    "step": {
+  "JOB": {
+    "mdl_id": {
       "type": "str",
       "required": true,
-      "help": "Which Step You Want to Execute",
-      "default": "S01"
+      "help": "Which Model You Want to Execute",
+      "default": null
+    },
+    "prjt_id": {
+      "type": "str",
+      "required": true,
+      "help": "Which Project ID You Want to Execute",
+      "default": null
+    },
+    "pipeln_id": {
+      "type": "str",
+      "required": true,
+      "help": "Which Pipeline in Model You Want to Execute",
+      "default": null
     }
-  },
-  "S01": {
-    "dt": {
-        "type": "float",
-        "help": "Time step size",
-        "default": 0.4},
-    "t": {
-        "type": "int",
-        "help": "Time steps between outputs",
-        "default": 50},
-    "f": {
-        "type": "str",
-        "help": "Landscape file name",
-        "default": "small.dat"}
-  },
-  "S02": {
-    "dt": {
-        "type": "float",
-        "help": "Time step size",
-        "default": 0.4},
-    "t": {
-        "type": "int",
-        "help": "Time steps between outputs",
-        "default": 50},
-    "f": {
-        "type": "str",
-        "help": "Landscape file name",
-        "default": "small.dat"}
-  },
-  "S03": {
-    "dt": {
-        "type": "float",
-        "help": "Time step size",
-        "default": 0.4},
-    "t": {
-        "type": "int",
-        "help": "Time steps between outputs",
-        "default": 50},
-    "f": {
-        "type": "str",
-        "help": "Landscape file name",
-        "default": "small.dat"}
-  },
-  "S04": {
-    "dt": {
-        "type": "float",
-        "help": "Time step size",
-        "default": 0.4},
-    "t": {
-        "type": "int",
-        "help": "Time steps between outputs",
-        "default": 50},
-    "f": {
-        "type": "str",
-        "help": "Landscape file name",
-        "default": "small.dat"}
   }
 }

@@ -1,0 +1,36 @@
+{
+  "M01": {
+    "P12": {
+      "src": "/home/istream3/py_codepad/metax_manager/batch_procs/MAML/step03_meta-train.py",
+      "dir_args": {
+        "prior_dir": "/home/istream3/matrix/apps/tomcat-8.5.39/webapps/bizmdl/metax/prj_data/M01/P11",
+        "curr_dir": "/home/istream3/matrix/apps/tomcat-8.5.39/webapps/bizmdl/metax/prj_data/M01/P12"
+      }
+    },
+    "P14": {
+      "src": "/home/istream3/py_codepad/metax_manager/batch_procs/MAML/step05_predict.py",
+      "dir_args": {
+        "prior_dir": "/home/istream3/matrix/apps/tomcat-8.5.39/webapps/bizmdl/metax/prj_data/M01/P13",
+        "curr_dir": "/home/istream3/matrix/apps/tomcat-8.5.39/webapps/bizmdl/metax/prj_data/M01/P14",
+        "step2_dir": "/home/istream3/matrix/apps/tomcat-8.5.39/webapps/bizmdl/metax/prj_data/M01/P11"
+      }
+    }
+  },
+  "M02": {
+    "P22": {
+      "src": "/home/istream3/py_codepad/metax_manager/batch_procs/MAML/step03_meta-train.py",
+      "dir_args": {
+        "prior_dir": "/home/istream3/matrix/apps/tomcat-8.5.39/webapps/bizmdl/metax/prj_data/M02/P21",
+        "curr_dir": "/home/istream3/matrix/apps/tomcat-8.5.39/webapps/bizmdl/metax/prj_data/M02/P22"
+      }
+    },
+    "P24": {
+      "src": "/home/istream3/py_codepad/metax_manager/batch_procs/MAML/step05_predict.py",
+      "dir_args": {
+        "prior_dir": "/home/istream3/matrix/apps/tomcat-8.5.39/webapps/bizmdl/metax/prj_data/M02/P23",
+        "curr_dir": "/home/istream3/matrix/apps/tomcat-8.5.39/webapps/bizmdl/metax/prj_data/M02/P24",
+        "step2_dir": "/home/istream3/matrix/apps/tomcat-8.5.39/webapps/bizmdl/metax/prj_data/M02/P21"
+      }
+    }
+  }
+}

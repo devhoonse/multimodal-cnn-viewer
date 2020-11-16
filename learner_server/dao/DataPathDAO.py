@@ -1,11 +1,8 @@
-# -*- coding: utf-8 -*-
-
-
 from ..common import SingletonInstance
 from . import AbstractDAO, AbstractSession
 
 
-class ParametersDAO(AbstractDAO, SingletonInstance):
+class DataPathDAO(AbstractDAO, SingletonInstance):
     """
     Demand Data Access Object
     """
@@ -15,7 +12,9 @@ class ParametersDAO(AbstractDAO, SingletonInstance):
         Query the Entire Situation
         """
         return session.select("SELECT * "
-                              "FROM DLP_PRJT_PIPELN_PARAM ", params)
+                              "FROM DLP_PIPELN_DATA_PATH "
+                              "WHERE MDL_ID = :MDL_ID "
+                              "ORDER BY MDL_ID, PIPELN_ID, DATA_ID", params)
 
     def select_one(self, session: AbstractSession, **params):
         """
@@ -27,7 +26,7 @@ class ParametersDAO(AbstractDAO, SingletonInstance):
         pass
 
     @classmethod
-    def select_params_setting(cls, session: AbstractSession, **params):
+    def select_queue_list(cls, session: AbstractSession, **params):
         """
         세션 인스턴스를 통해 Data Source로 부터 list 데이터 조회
         :param session: AbstractSession Instance
@@ -35,10 +34,17 @@ class ParametersDAO(AbstractDAO, SingletonInstance):
         :return: {"columns" : columns, "data" : list}
         """
         return session.select("SELECT * "
-                              "FROM DLP_PRJT_PIPELN_PARAM "
-                              "WHERE MDL_ID = :MDL_ID "
-                              "AND PRJT_ID = :PRJT_ID "
-                              "AND PIPELN_ID = :PIPELN_ID ", params)
+                              "FROM DLP_PRJT_PIPELN "
+                              "WHERE OP_CD = 'QUEUE' "
+                              "ORDER BY RGST_DT_TM", params)
+
+    @classmethod
+    def assign_jobs_from_queue(cls, session: AbstractSession, **params):
+        return session.execute("UPDATE DLP_PRJT_PIPELN "
+                               "SET OP_CD = 'RUNNING' "
+                               "WHERE MDL_ID = :MDL_ID "
+                               "AND PRJT_ID = :PRJT_ID "
+                               "AND PIPELN_ID = :PIPELN_ID", **params)
 
     def execute(self, session: AbstractSession, sql_template: str, data_list: list):
         """
