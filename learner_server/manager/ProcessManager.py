@@ -277,9 +277,16 @@ class ProcessManager(SingletonInstance):
         for param in params:
             cmd_args.update({param["PARAM_NM"]: param["PARAM_VAL"]})
         for argname, val in cmd_args.items():
-            cmd.extend(
-                [f"--{argname.lower()}", val]
-            )
+            if val == "True":
+                cmd.extend(
+                    [f"--{argname.lower()}"]
+                )
+            elif val == "False":
+                pass
+            else:
+                cmd.extend(
+                    [f"--{argname.lower()}", val]
+                )
         # cmd.extend(['&'])
 
         OSHandler.create_directory(log_stdout, is_directory=False)

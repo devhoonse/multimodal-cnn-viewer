@@ -32,21 +32,5 @@
         "step2_dir": "/home/istream3/matrix/apps/tomcat-8.5.39/webapps/bizmdl/metax/prj_data/M02/P21"
       }
     }
-  },
-  "M04": {
-    "P42": {
-      "src": "/home/istream3/py_codepad/metax_manager/batch_procs/MCNN/step02_mcnn-train.py",
-      "dir_args": {
-        "prior_dir": "/home/istream3/matrix/apps/tomcat-8.5.39/webapps/bizmdl/metax/prj_data/M04/P41",
-        "curr_dir" : "/home/istream3/matrix/apps/tomcat-8.5.39/webapps/bizmdl/metax/prj_data/M04/P42"
-      }
-    },
-    "P43": {
-      "src": "/home/istream3/py_codepad/metax_manager/batch_procs/MCNN/step04_predict.py",
-      "dir_args": {
-        "prior_dir": "/home/istream3/matrix/apps/tomcat-8.5.39/webapps/bizmdl/metax/prj_data/M04/P43",
-        "curr_dir" : "/home/istream3/matrix/apps/tomcat-8.5.39/webapps/bizmdl/metax/prj_data/M04/P44"
-      }
-    }
   }
 }

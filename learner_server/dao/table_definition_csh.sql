@@ -17,18 +17,3 @@ create table PROCESS
         primary key (PRJ_ID, WORK_ID, STEP)
 )
 /
-
---Parameter json BLOB Container
-create table PARAMS
-(
-    PRJ_ID       VARCHAR2(50),
-    WORK_ID      VARCHAR2(50),
-    STEP         VARCHAR2(50),
-    PARAM_OBJECT BLOB,
-    constraint TABLE_NAME_PK
-        unique (PRJ_ID, WORK_ID, STEP)
-)
-/
-
-
-
